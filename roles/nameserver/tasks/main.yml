@@ -1,0 +1,46 @@
+- name: install bind
+  apt:
+    name: bind9
+    state: present
+  notify: bind enable
+
+- name: disable named apparmor (symlink)
+  file:
+    src: /etc/apparmor.d/usr.sbin.named
+    dest: /etc/apparmor.d/disable/usr.sbin.named
+    state: link
+
+- name: disable named apparmor (apparmor_parser)
+  ignore_errors: yes
+  command: apparmor_parser -R /etc/apparmor.d/usr.sbin.named
+
+- name: ensure bind log dir
+  file:
+    path: /var/log/named
+    group: bind
+    owner: root
+    mode: '0775'
+    state: directory
+
+- name: bind config
+  copy:
+    src: named.conf
+    dest: /etc/bind/named.conf
+  notify: bind update
+
+- name: ensure named configuration directory exists
+  file:
+    path: /var/named
+    group: bind
+    owner: root
+    state: directory
+    mode: '0775'
+
+- name: master.jb3.dev zone config
+  template:
+    src: master.jb3.dev.j2
+    dest: /var/named/master.jb3.dev
+    owner: root
+    group: bind
+    mode: '0775'
+  notify: bind update
