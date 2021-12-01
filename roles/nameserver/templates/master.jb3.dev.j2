@@ -4,7 +4,7 @@
 
 $TTL    1h
 @   IN  SOA ns1.jb3.dev. joe.jb3.dev. (
-                            7  ; serial
+                            8  ; serial
                             3H ; refresh
                             15 ; retry
                             1w ; expire
@@ -28,7 +28,9 @@ lg      IN  AAAA   2a0f:85c1:23::
 syslog  IN  AAAA   2a0f:85c1:23:1::
 
 ; CNAME records
-www     IN  CNAME  cname.vercel-dns.com.
+www         IN  CNAME  cname.vercel-dns.com.
+podcasts    IN  CNAME  urn-hstp.azureedge.net.
+polywork    IN  CNAME  glacial-raspberry-1ci6dx01r4f5eui8kjdp7lfl.herokudns.com.
 
 ; CERT records
 joe     IN  CERT PGP 0 0 mDMEYLIw4RYJKwYBBAHaRw8BAQdAPt1Gnxd89MtIlnHSTl/1KkzeTOgK3vMVqldweMVaDqO0F0pvZSBCYW5rcyA8am9lQGpiMy5kZXY+iJQEExYIADwWIQS+3+LMjY9+dSbD3sTfyx6jnGbO6AUCYLIw4QIbAwULCQgHAgMiAgEGFQoJCAsCBBYCAwECHgcCF4AACgkQ38seo5xmzuitMQEAhAMhYWfpIMIcNGebeA5Wes6n4z6C11EGSDXP6V3zq9kA/RAV9fXW1fwhNwpKmzEryW6mQJJtTlWdRiEf1JOUg2wLuDgEYLIw4RIKKwYBBAGXVQEFAQEHQJ44WxaegYFmip0JgXwpC3mBQZz0zUEBVSHosNdlN5k9AwEIB4h4BBgWCAAgFiEEvt/izI2PfnUmw97E38seo5xmzugFAmCyMOECGwwACgkQ38seo5xmzugC+AD+IRLUBSwIyqtMv8Q+FTRWVCUu8GTnckspSty2qCYjqgUA/00fEUNBo6cJv3Cz7YXf+Mw00yU45uAhI9MuIuTGX5ED
