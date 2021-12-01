@@ -1,0 +1,50 @@
+; Zone for jb3.dev
+;
+; Records should be grouped by (type, resolved host, alphabetical label)
+
+$TTL    1h
+@   IN  SOA ns1.jb3.dev. joe.jb3.dev. (
+                            7  ; serial
+                            3H ; refresh
+                            15 ; retry
+                            1w ; expire
+                            3h ; min ttl
+                        )
+    IN  NS      ns1.jb3.dev.
+    IN  NS      ns2.jb3.dev.
+
+ns1     IN  A   {{ hostvars.ns1.ansible_host }}
+ns2     IN  A   {{ hostvars.ns2.ansible_host }}
+
+; A records
+@       IN  A   76.76.21.21
+joe     IN  A   108.61.172.150
+syslog  IN  A   108.61.172.150
+modmail IN  A   202.61.228.148
+
+; AAAA records
+dns     IN  AAAA   2a0f:85c1:23::6969
+lg      IN  AAAA   2a0f:85c1:23::
+syslog  IN  AAAA   2a0f:85c1:23:1::
+
+; CNAME records
+www     IN  CNAME  cname.vercel-dns.com.
+
+; CERT records
+joe     IN  CERT PGP 0 0 mDMEYLIw4RYJKwYBBAHaRw8BAQdAPt1Gnxd89MtIlnHSTl/1KkzeTOgK3vMVqldweMVaDqO0F0pvZSBCYW5rcyA8am9lQGpiMy5kZXY+iJQEExYIADwWIQS+3+LMjY9+dSbD3sTfyx6jnGbO6AUCYLIw4QIbAwULCQgHAgMiAgEGFQoJCAsCBBYCAwECHgcCF4AACgkQ38seo5xmzuitMQEAhAMhYWfpIMIcNGebeA5Wes6n4z6C11EGSDXP6V3zq9kA/RAV9fXW1fwhNwpKmzEryW6mQJJtTlWdRiEf1JOUg2wLuDgEYLIw4RIKKwYBBAGXVQEFAQEHQJ44WxaegYFmip0JgXwpC3mBQZz0zUEBVSHosNdlN5k9AwEIB4h4BBgWCAAgFiEEvt/izI2PfnUmw97E38seo5xmzugFAmCyMOECGwwACgkQ38seo5xmzugC+AD+IRLUBSwIyqtMv8Q+FTRWVCUu8GTnckspSty2qCYjqgUA/00fEUNBo6cJv3Cz7YXf+Mw00yU45uAhI9MuIuTGX5ED
+
+; LOC records
+@       IN  LOC 38 57 6.120 N 77 08 48.120 W 0m 0.00m 0.00m 0.00m
+
+; MX records
+@       IN  MX  1 aspmx.l.google.com.
+        IN  MX  5 alt2.aspmx.l.google.com.
+        IN  MX  5 alt1.aspmx.l.google.com.
+        IN  MX  10 alt4.aspmx.l.google.com.
+        IN  MX  10 alt3.aspmx.l.google.com.
+
+; TXT records
+@                       IN  TXT     "v=spf1 include:_spf.google.com ~all"
+                        IN  TXT     "keybase-site-verification=IwS3xfzNgfRW24EKdVy0_baH8QRbYcoZ39lmtSKXffk"
+_dmarc                  IN  TXT     "v=DMARC1; p=none; rua=mailto:joe@jb3.dev"
+google._domainkey       IN  TXT     ( "v=DKIM1; k=rsa;" " p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkqzOiWsXBXmWE9wuSxT3BWPgq" "s3CdpkZ57SUzeMoUnNAip7bl+Ymmtw1LfFOg53fs5LHtlwUBQwZo7NQ5dHj4lUpGW6n1kJxnjZ2DPy" "Ba+Dj4JINDkSaEp5LTk/EBfCe2pCWFBBTwpB7fy8X2xlLuJflDEHfKCZAIY710N57+fYnUjBDBEv8" "S3dIGg5/qJNSyiYuP78nyAlTQMt4kViIfdBqOGNo8r3vTERmgI0RerOgGJySns4Js2kdSwEi5oBMv" "neDjGHkIWqnyuD4wNsyVBp6brZf0TNe3hPq1h+UNBS3YFdxGe5+Prg9yK/yszP+402PhunkdVfW1c" "aFgeDw9QIDAQAB" )
