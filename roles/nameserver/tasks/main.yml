@@ -72,9 +72,14 @@
     mode: '0775'
     state: directory
 
+- name: fetch kanye quotes
+  uri:
+    url: https://api.kanye.rest/
+  register: kanye_quote
+
 - name: bind config
-  copy:
-    src: named.conf
+  template:
+    src: named.conf.j2
     dest: /etc/bind/named.conf
   notify: bind update
 
