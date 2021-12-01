@@ -12,3 +12,7 @@ I wanted to see how fun it was to run your own DNS server.
 ** How does it work?
 
 /To be written.../
+
+** Attributions
+
+Credit for a lot of the Ansible work here goes to Josh Mcguigan, see [[https://github.com/JoshMcguigan/infra][this repo]].
