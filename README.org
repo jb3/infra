@@ -1,0 +1,14 @@
+#+TITLE: DNS
+
+* What is this?
+
+This project contains the zone files and ansible scripts for the following domains:
+- jb3.dev
+
+* Why does it exist?
+
+I wanted to see how fun it was to run your own DNS server.
+
+* How does it work?
+
+/To be written.../
