@@ -4,15 +4,65 @@
     state: present
   notify: bind enable
 
+- name: install rsync
+  apt:
+    name: rsync
+    state: present
+
 - name: disable named apparmor (symlink)
   file:
     src: /etc/apparmor.d/usr.sbin.named
     dest: /etc/apparmor.d/disable/usr.sbin.named
     state: link
+  register: apparmor_disable
 
 - name: disable named apparmor (apparmor_parser)
   ignore_errors: yes
   command: apparmor_parser -R /etc/apparmor.d/usr.sbin.named
+  when: apparmor_disable.changed
+
+- name: dnssec - check for keys
+  delegate_to: localhost
+  stat:
+    path: keys
+  register: dnssec_keys
+  run_once: true
+
+- name: dnssec - create temp keys dir
+  file:
+    path: /tmp/keys
+    state: directory
+  when: not dnssec_keys.stat.exists
+  run_once: true
+
+- name: dnssec - generate ZSK
+  command:
+    cmd: dnssec-keygen -3 -a RSASHA256 -b 2048 -n ZONE jb3.dev
+    chdir: /tmp/keys
+  when: not dnssec_keys.stat.exists
+  run_once: true
+
+- name: dnssec - generate KSK
+  command:
+    cmd: dnssec-keygen -3 -f KSK -a RSASHA256 -b 4096 -n ZONE jb3.dev
+    chdir: /tmp/keys
+  when: not dnssec_keys.stat.exists
+  run_once: true
+
+- name: dnssec - fetch generated keys
+  ansible.posix.synchronize:
+    mode: pull
+    src: /tmp/keys
+    dest: "{{ playbook_dir }}"
+  when: not dnssec_keys.stat.exists
+  run_once: true
+
+- name: dnssec - remove remote key directory
+  file:
+    state: absent
+    path: /tmp/keys
+  when: not dnssec_keys.stat.exists
+  run_once: true
 
 - name: ensure bind log dir
   file:
@@ -36,11 +86,65 @@
     state: directory
     mode: '0775'
 
-- name: master.jb3.dev zone config
+- name: create named staging directory
+  file:
+    path: /var/named-staging
+    group: bind
+    owner: root
+    state: directory
+
+- name: push zone config to staging
   template:
     src: master.jb3.dev.zone.j2
-    dest: /var/named/master.jb3.dev
+    dest: /var/named-staging/master.jb3.dev
     owner: root
     group: bind
     mode: '0775'
+
+- name: dnssec - copy dnssec keys to remote
+  ansible.posix.synchronize:
+    mode: push
+    src: "{{ playbook_dir }}/keys"
+    dest: "/var/named-staging"
+
+- name: dnssec - copy keys to staging directory
+  shell: mv /var/named-staging/keys/* /var/named-staging
+
+- name: dnssec - get key names
+  find:
+    paths: /var/named-staging
+    patterns: Kjb3.dev*.key
+  register: dnssec_keys
+
+- name: dnssec - generate random salt
+  shell: head -c 1000 /dev/urandom | sha1sum | cut -b 1-16
+  register: dnssec_salt
+
+- name: dnssec - append DNSKEY includes to zone
+  lineinfile:
+    path: /var/named-staging/master.jb3.dev
+    line: "$INCLUDE {{ item.path | basename }}"
+  with_items: "{{ dnssec_keys.files }}"
+
+- name: dnssec - sign DNS zone file
+  command:
+    cmd: "dnssec-signzone -3 {{ dnssec_salt.stdout }} -N INCREMENT -o jb3.dev -t master.jb3.dev"
+    chdir: /var/named-staging
+
+- name: copy signed zone to production
+  copy:
+    remote_src: true
+    src: /var/named-staging/master.jb3.dev.signed
+    dest: /var/named/master.jb3.dev
   notify: bind update
+
+- name: dnssec - fetch DS record set
+  fetch:
+    src: /var/named-staging/dsset-jb3.dev.
+    dest: dsset
+  run_once: true
+
+- name: delete named staging directory
+  file:
+    state: absent
+    path: /var/named-staging
