@@ -38,7 +38,7 @@
 
 - name: master.jb3.dev zone config
   template:
-    src: master.jb3.dev.j2
+    src: master.jb3.dev.zone.j2
     dest: /var/named/master.jb3.dev
     owner: root
     group: bind
