@@ -4,6 +4,12 @@
     state: present
   notify: nginx enable
 
+- name: install nginx-extras
+  apt:
+    name: nginx-extras
+    state: present
+  notify: nginx enable
+
 - name: install rsync
   apt:
     name: rsync

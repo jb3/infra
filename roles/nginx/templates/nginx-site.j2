@@ -7,6 +7,12 @@ server {
         {% include "static.j2" %}
     {% endif %}
 
+    {% if "headers" in item %}
+        {% for header, value in item["headers"].items() %}
+            more_set_headers "{{ header }}: {{ value }}";
+        {% endfor %}
+    {% endif %}
+
 
     listen 443 ssl;
     ssl_certificate /etc/letsencrypt/live/{{ item.certificate }}/fullchain.pem;

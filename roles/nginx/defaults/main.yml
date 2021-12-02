@@ -9,3 +9,6 @@ sites:
   type: static
   domain: jb3.dev
   root: /var/www/jb3.dev
+  headers:
+    Content-Security-Policy: default-src 'self' https://www.youtube.com/ 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;
+
