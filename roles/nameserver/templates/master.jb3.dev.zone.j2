@@ -4,7 +4,7 @@
 
 $TTL    1h
 @   IN  SOA ns1.jb3.dev. joe.jb3.dev. (
-                            10  ; serial
+                            12 ; serial
                             3H ; refresh
                             15 ; retry
                             1w ; expire
@@ -44,6 +44,10 @@ joe     IN  CERT PGP 0 0 mDMEYLIw4RYJKwYBBAHaRw8BAQdAPt1Gnxd89MtIlnHSTl/1KkzeTOg
         IN  MX  5 alt1.aspmx.l.google.com.
         IN  MX  10 alt4.aspmx.l.google.com.
         IN  MX  10 alt3.aspmx.l.google.com.
+
+; CAA records (certificate authority authorization)
+@       IN  CAA  0 issue "letsencrypt.org"
+        IN  CAA  0 iodef "mailto:joe@jb3.dev"
 
 ; TXT records
 @                       IN  TXT     "v=spf1 include:_spf.google.com ~all"
