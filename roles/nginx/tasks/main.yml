@@ -1,0 +1,24 @@
+- name: install nginx
+  apt:
+    name: nginx
+    state: present
+  notify: nginx enable
+
+- name: install rsync
+  apt:
+    name: rsync
+    state: present
+
+- name: install nginx configuration
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  notify: nginx reload
+
+- name: generate nginx configurations
+  template:
+    src: nginx-site.j2
+    dest: /etc/nginx/sites-enabled/{{ item.name }}
+  with_items:
+    - "{{ sites }}"
+  notify: nginx reload

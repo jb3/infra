@@ -5,3 +5,17 @@
 - hosts: nameservers
   roles:
     - nameserver
+  tags:
+    - dns
+
+- hosts: web
+  roles:
+    - nginx
+  tags:
+    - web
+
+- hosts: web
+  roles:
+    - blog
+  tags:
+    - blog

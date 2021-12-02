@@ -1,0 +1,5 @@
+root {{ item.root }};
+
+location / {
+    try_files $uri $uri/ =404;
+}
