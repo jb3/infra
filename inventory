@@ -1,3 +1,6 @@
+[web]
+tumbleweed ansible_host=202.61.228.148
+
 [nameservers]
 ns1 ansible_host=89.58.0.80
 ns2 ansible_host=89.58.3.54
