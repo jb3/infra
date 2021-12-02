@@ -1,18 +1,23 @@
 #+TITLE: Infra
 
-** What is this?
+** Components
 
-This project contains the zone files and ansible scripts for the following domains:
+*** DNS
+DNS is provided by the `nameserver` group and role. It manages two authoritative DNS servers located at `ns1.jb3.dev` and `ns2.jb3.dev`.
+
+DNS servers are authoritative for the following zones:
 - jb3.dev
 
-** Why does it exist?
+Zones are signed using DNSSEC and keys are automatically generated if not present on the local machine. After DNS has been deployed the necessary DS records are downloaded from ns1.jb3.dev, it is only required to put the SHA256 hash at the registrar, not the shorter SHA1 hash.
 
-I wanted to see how fun it was to run your own DNS server.
+Eventually I'll write a blog post on this.
 
-** How does it work?
+*** NGINX
 
-/To be written.../
+NGINX is installed and deployed to a single server using the `nginx` role. Configuration is automatically generated according to role variables defining static sites and reverse proxies.
 
-** Attributions
+See the NGINX role for configuration and active sites. Soon TLS will be handled in this role/another similar role.
 
-Credit for a lot of the Ansible work here goes to Josh Mcguigan, see [[https://github.com/JoshMcguigan/infra][this repo]].
+*** Blog
+
+My blog ([[https://jb3.dev][jb3.dev]]) is deployed from the `blog` role in this repository. You can see the GitHub Action that does deployment [[https://github.com/jb3/blog/blob/main/.github/workflows/main.yml][here]], the site is built inside CI and rsync-ed to the production host.
