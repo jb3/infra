@@ -4,7 +4,7 @@
 
 $TTL    1h
 @   IN  SOA ns1.jb3.dev. joe.jb3.dev. (
-                            9  ; serial
+                            10  ; serial
                             3H ; refresh
                             15 ; retry
                             1w ; expire
@@ -13,8 +13,9 @@ $TTL    1h
     IN  NS      ns1.jb3.dev.
     IN  NS      ns2.jb3.dev.
 
-ns1     IN  A   {{ hostvars.ns1.ansible_host }}
-ns2     IN  A   {{ hostvars.ns2.ansible_host }}
+{% for hostname, host in hostvars.items() %}
+{{ hostname }}  IN  A  {{ host.ansible_host }}
+{% endfor %}
 
 ; A records
 @       IN  A   76.76.21.21
