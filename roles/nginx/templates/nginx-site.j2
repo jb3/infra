@@ -16,8 +16,8 @@ server {
 
     listen [::]:443 http2 ssl;
     listen 443 http2 ssl;
-    ssl_certificate /etc/letsencrypt/live/{{ item.certificate }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ item.certificate }}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ sites[0]["domain"] }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ sites[0]["domain"] }}/privkey.pem;
     ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
 
     {% if "additional_ports" in item %}

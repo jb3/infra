@@ -1,18 +1,18 @@
+tls_email: joe@jb3.dev
+tls_well_known_location: /var/www/letsencrypt
+
 sites:
-- name: modmail
-  type: reverse-proxy
-  certificate: jb3.dev
-  domain: modmail.jb3.dev
-  upstream: http://localhost:8890
 - name: default
-  certificate: jb3.dev
   type: static
   domain: jb3.dev
   root: /var/www/jb3.dev
   headers:
     Content-Security-Policy: default-src 'self' https://www.youtube.com/ 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;
+- name: modmail
+  type: reverse-proxy
+  domain: modmail.jb3.dev
+  upstream: http://localhost:8890
 - name: matrix
-  certificate: jb3.dev
   type: reverse-proxy
   domain: matrix.jb3.dev
   upstream: http://localhost:8008

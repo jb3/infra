@@ -1,8 +1,24 @@
+#######
+####### Major credit to my brother from another mother for the Let's Encrypt configurations:
+#######
+
+#       d88b  .o88b. db   db d8888b. d888888b .d8888. d888888b  d888b  d888888b d888888b
+#       `8P' d8P  Y8 88   88 88  `8D   `88'   88'  YP `~~88~~' 88' Y8b   `88'   `~~88~~'
+#        88  8P      88ooo88 88oobY'    88    `8bo.      88    88         88       88
+#        88  8b      88~~~88 88`8b      88      `Y8b.    88    88  ooo    88       88
+#    db. 88  Y8b  d8 88   88 88 `88.   .88.   db   8D    88    88. ~8~   .88.      88
+#    Y8888P   `Y88P' YP   YP 88   YD Y888888P `8888Y'    YP     Y888P  Y888888P    YP
+
 - name: install nginx
   apt:
     name: nginx
     state: present
   notify: nginx enable
+
+- name: install certbot
+  apt:
+    name: certbot
+    state: present
 
 - name: install nginx-extras
   apt:
@@ -16,10 +32,51 @@
     state: present
 
 - name: install nginx configuration
-  copy:
-    src: nginx.conf
+  template:
+    src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
   notify: nginx reload
+
+- name: generate list of domains to generate certificates for
+  set_fact:
+    DOMAINS: "{{ sites | map(attribute='domain') | list }}"
+
+- name: check letsencrypt webroot exists
+  file:
+    name: /var/www/letsencrypt
+    state: directory
+
+- name: check if certificate is present
+  stat:
+    path: '/etc/letsencrypt/live/{{ sites[0]["domain"] }}'
+  register: cert_live
+
+- name: clear config dir if cert does not exist
+  file: path=/etc/nginx/sites-enabled state=absent
+  when: cert_live.stat.exists == false
+
+- name: create config dir again if deleted
+  file: path=/etc/nginx/sites-enabled state=directory
+  when: cert_live.stat.exists == false
+
+- name: restart nginx if config had to be wiped
+  service:
+    name: nginx
+    state: restarted
+  when: cert_live.stat.exists == false
+
+- name: provision TLS certificates for all configured domains
+  command: >-
+    /usr/bin/certbot
+    --agree-tos
+    --non-interactive
+    --email {{ tls_email }}
+    --authenticator webroot
+    --webroot-path {{ tls_well_known_location | quote }}
+    --domains {{ DOMAINS | join(",") | quote }}
+    certonly
+  args:
+    creates: /etc/letsencrypt/live/{{ sites[0]["domain"] }}
 
 - name: generate nginx configurations
   template:
@@ -28,3 +85,15 @@
   with_items:
     - "{{ sites }}"
   notify: nginx reload
+
+- name: reload nginx after certificate renewal
+  copy:
+    content: |
+      #!/bin/sh
+      set -ex
+
+      systemctl reload nginx
+    dest: /etc/letsencrypt/renewal-hooks/deploy/reload-nginx
+    owner: root
+    group: root
+    mode: 0500
