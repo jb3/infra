@@ -11,4 +11,11 @@ sites:
   root: /var/www/jb3.dev
   headers:
     Content-Security-Policy: default-src 'self' https://www.youtube.com/ 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;
-
+- name: matrix
+  certificate: jb3.dev
+  type: reverse-proxy
+  domain: matrix.jb3.dev
+  upstream: http://localhost:8008
+  additional_ports:
+    - port: 8448
+      tls: true

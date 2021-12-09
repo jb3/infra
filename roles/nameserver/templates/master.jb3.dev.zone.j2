@@ -22,6 +22,7 @@ $TTL    1h
 joe     IN  A   108.61.172.150
 syslog  IN  A   108.61.172.150
 modmail IN  A   202.61.228.148
+matrix  IN  A   202.61.228.148
 
 ; AAAA records
 dns     IN  AAAA   2a0f:85c1:23::6969
@@ -34,6 +35,9 @@ polywork    IN  CNAME  glacial-raspberry-1ci6dx01r4f5eui8kjdp7lfl.herokudns.com.
 
 ; CERT records
 joe     IN  CERT PGP 0 0 mDMEYLIw4RYJKwYBBAHaRw8BAQdAPt1Gnxd89MtIlnHSTl/1KkzeTOgK3vMVqldweMVaDqO0F0pvZSBCYW5rcyA8am9lQGpiMy5kZXY+iJQEExYIADwWIQS+3+LMjY9+dSbD3sTfyx6jnGbO6AUCYLIw4QIbAwULCQgHAgMiAgEGFQoJCAsCBBYCAwECHgcCF4AACgkQ38seo5xmzuitMQEAhAMhYWfpIMIcNGebeA5Wes6n4z6C11EGSDXP6V3zq9kA/RAV9fXW1fwhNwpKmzEryW6mQJJtTlWdRiEf1JOUg2wLuDgEYLIw4RIKKwYBBAGXVQEFAQEHQJ44WxaegYFmip0JgXwpC3mBQZz0zUEBVSHosNdlN5k9AwEIB4h4BBgWCAAgFiEEvt/izI2PfnUmw97E38seo5xmzugFAmCyMOECGwwACgkQ38seo5xmzugC+AD+IRLUBSwIyqtMv8Q+FTRWVCUu8GTnckspSty2qCYjqgUA/00fEUNBo6cJv3Cz7YXf+Mw00yU45uAhI9MuIuTGX5ED
+
+; SRV records
+_matrix._tcp     IN  SRV  10 0 8448 matrix.jb3.dev.
 
 ; LOC records
 @       IN  LOC 38 57 6.120 N 77 08 48.120 W 0m 0.00m 0.00m 0.00m

@@ -20,5 +20,12 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/{{ item.certificate }}/privkey.pem;
     ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
 
+    {% if "additional_ports" in item %}
+        {% for port in item["additional_ports"] %}
+            listen {{ port["port"] }} {{ "ssl http2" if port["tls"] else None }} default_server;
+            listen [::]:{{ port["port"] }} {{ "ssl http2" if port["tls"] else None }} default_server;
+        {% endfor %}
+    {% endif %}
+
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 }
