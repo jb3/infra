@@ -19,3 +19,7 @@ sites:
   additional_ports:
     - port: 8448
       tls: true
+- name: gitea
+  type: reverse-proxy
+  domain: git.jb3.dev
+  upstream: http://localhost:3000
