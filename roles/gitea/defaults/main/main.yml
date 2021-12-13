@@ -1,0 +1,18 @@
+gitea_binary_url: https://github.com/go-gitea/gitea/releases/download/v1.15.7/gitea-1.15.7-linux-amd64
+gitea_checksum: 39b2a3f447a102822216fcc695fafed64dd5745d455ce9bdb15381e80f0f38e5
+
+# Gitea config varibles
+gitea_security_token: (( encrypted_gitea_security_token ))
+gitea_secret_key: (( encrypted_gitea_secret_key ))
+gitea_app_name: 'jb3 : gitea'
+gitea_http_addr: '127.0.0.1'
+gitea_public_domain: 'git.jb3.dev'
+
+gitea_postgres_host: 'localhost:5432'
+gitea_postgres_db: gitea
+gitea_postgres_user: gitea
+gitea_postgres_passwd: (( encrypted_gitea_postgres_passwd ))
+
+gitea_data_dir: /var/lib/gitea
+
+gitea_lfs_secret: (( encrypted_gitea_lfs_secret ))

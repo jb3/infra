@@ -1,0 +1,51 @@
+[Unit]
+Description=self-hosted git service
+Documentation=https://docs.gitea.io/en-us/
+
+[Service]
+User=gitea
+Group=gitea
+RuntimeDirectory=gitea
+StateDirectory=gitea
+StateDirectoryMode=0700
+ExecStart=/usr/bin/gitea -c /etc/gitea/app.ini
+Environment=USER=gitea HOME=/var/lib/gitea GITEA_WORK_DIR=/var/lib/gitea
+WorkingDirectory=/var/lib/gitea
+
+# Comment out the following if your Gitea does not need external internet access
+# and the only clients connecting are from localhost (such as your reverse proxy).
+# The following features may not work properly when using these settings:
+#   - Repository mirroring
+#   - External authorization providers
+# IPAddressAllow=localhost
+# IPAddressDeny=any
+
+CapabilityBoundingSet=
+LockPersonality=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RemoveIPC=true
+RestrictAddressFamilies=AF_INET
+RestrictNamespaces=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+UMask=0077
+
+
+# REVIEW: only needs access to /etc/gitea. use tmpfs for /etc, bind mount over
+#   systemd-run -t -p TemporaryFileSystem=/etc:ro -p BindReadOnlyPaths=/etc/gitea/ bash
+ReadWritePaths=/etc/gitea/app.ini
+ReadWritePaths=/var/lib/gitea
+
+[Install]
+WantedBy=network-online.target
