@@ -6,3 +6,6 @@ tmp/
 # DNSSEC keys
 keys/
 dsset/
+
+# Ansible Vault credentials
+vault_passwords
