@@ -19,3 +19,9 @@
     - blog
   tags:
     - blog
+
+- hosts: web
+  roles:
+    - gitea
+  tags:
+    - gitea
