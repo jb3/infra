@@ -74,3 +74,12 @@ PATH = (( gitea_data_dir ))/attachments
 
 [storage.repo-archive]
 PATH = (( gitea_data_dir ))/repo-archive
+
+[mailer]
+ENABLED        = true
+FROM           = (( gitea_mail_from ))
+MAILER_TYPE    = smtp
+HOST           = (( gitea_mail_smtp ))
+IS_TLS_ENABLED = (( gitea_mail_tls ))
+USER           = (( gitea_mail_user ))
+PASSWD         = (( gitea_mail_passwd ))

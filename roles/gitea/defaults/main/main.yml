@@ -16,3 +16,9 @@ gitea_postgres_passwd: (( encrypted_gitea_postgres_passwd ))
 gitea_data_dir: /var/lib/gitea
 
 gitea_lfs_secret: (( encrypted_gitea_lfs_secret ))
+
+gitea_mail_from: 'gitea@jb3.dev'
+gitea_mail_smtp: 'smtp-relay.gmail.com:465'
+gitea_mail_tls: true
+gitea_mail_user: 'joe@jb3.dev'
+gitea_mail_passwd: (( encrypted_gitea_mail_passwd ))
