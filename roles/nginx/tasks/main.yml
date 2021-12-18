@@ -35,16 +35,18 @@
   template:
     src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
+    mode: '0774'
   notify: nginx reload
 
 - name: generate list of domains to generate certificates for
   set_fact:
-    DOMAINS: "{{ sites | map(attribute='domain') | list }}"
+    domains: "{{ sites | map(attribute='domain') | list }}"
 
 - name: check letsencrypt webroot exists
   file:
     name: /var/www/letsencrypt
     state: directory
+    mode: '0774'
 
 - name: check if certificate is present
   stat:
@@ -53,17 +55,17 @@
 
 - name: clear config dir if cert does not exist
   file: path=/etc/nginx/sites-enabled state=absent
-  when: cert_live.stat.exists == false
+  when: not cert_live.stat.exists
 
 - name: create config dir again if deleted
-  file: path=/etc/nginx/sites-enabled state=directory
-  when: cert_live.stat.exists == false
+  file: path=/etc/nginx/sites-enabled state=directory mode=0774
+  when: not cert_live.stat.exists
 
 - name: restart nginx if config had to be wiped
   service:
     name: nginx
     state: restarted
-  when: cert_live.stat.exists == false
+  when: not cert_live.stat.exists
 
 - name: provision TLS certificates for all configured domains
   command: >-
@@ -73,7 +75,7 @@
     --email {{ tls_email }}
     --authenticator webroot
     --webroot-path {{ tls_well_known_location | quote }}
-    --domains {{ DOMAINS | join(",") | quote }}
+    --domains {{ domains | join(",") | quote }}
     certonly
   args:
     creates: /etc/letsencrypt/live/{{ sites[0]["domain"] }}
@@ -82,6 +84,7 @@
   template:
     src: nginx-site.j2
     dest: /etc/nginx/sites-enabled/{{ item.name }}
+    mode: '0774'
   with_items:
     - "{{ sites }}"
   notify: nginx reload

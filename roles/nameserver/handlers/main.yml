@@ -8,3 +8,7 @@
   service:
     name: bind9
     state: reloaded
+
+- name: disable named apparmor
+  command: apparmor_parser -R /etc/apparmor.d/usr.sbin.named
+  when: apparmor_disable.changed

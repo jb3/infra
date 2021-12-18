@@ -14,12 +14,8 @@
     src: /etc/apparmor.d/usr.sbin.named
     dest: /etc/apparmor.d/disable/usr.sbin.named
     state: link
-  register: apparmor_disable
-
-- name: disable named apparmor (apparmor_parser)
-  ignore_errors: yes
-  command: apparmor_parser -R /etc/apparmor.d/usr.sbin.named
-  when: apparmor_disable.changed
+  notify:
+    - disable named apparmor
 
 - name: dnssec - check for keys
   delegate_to: localhost
@@ -32,6 +28,7 @@
   file:
     path: /tmp/keys
     state: directory
+    mode: '0770'
   when: not dnssec_keys.stat.exists
   run_once: true
 
@@ -81,6 +78,7 @@
   template:
     src: named.conf.j2
     dest: /etc/bind/named.conf
+    mode: '0664'
   notify: bind update
 
 - name: ensure named configuration directory exists
@@ -96,6 +94,7 @@
     path: /var/named-staging
     group: bind
     owner: root
+    mode: '0775'
     state: directory
 
 - name: push zone config to staging
@@ -114,6 +113,7 @@
 
 - name: dnssec - copy keys to staging directory
   shell: mv /var/named-staging/keys/* /var/named-staging
+  when: true
 
 - name: dnssec - get key names
   find:
@@ -122,8 +122,11 @@
   register: dnssec_keys
 
 - name: dnssec - generate random salt
-  shell: head -c 1000 /dev/urandom | sha1sum | cut -b 1-16
+  shell: set -o pipefail && head -c 1000 /dev/urandom | sha1sum | cut -b 1-16
   register: dnssec_salt
+  args:
+    executable: /bin/bash
+  when: true
 
 - name: dnssec - append DNSKEY includes to zone
   lineinfile:
@@ -135,12 +138,14 @@
   command:
     cmd: "dnssec-signzone -3 {{ dnssec_salt.stdout }} -N INCREMENT -o jb3.dev -t master.jb3.dev"
     chdir: /var/named-staging
+  when: true
 
 - name: copy signed zone to production
   copy:
     remote_src: true
     src: /var/named-staging/master.jb3.dev.signed
     dest: /var/named/master.jb3.dev
+    mode: '0774'
   notify: bind update
 
 - name: dnssec - fetch DS record set
