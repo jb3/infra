@@ -1,6 +1,11 @@
+stromberg ansible_host=89.58.24.140
+
 [web]
-tumbleweed ansible_host=202.61.228.148
+scaramanga ansible_host=202.61.228.148
+
+[routers]
+blofeld ansible_host=108.61.172.150 ansible_user=jb3 ansible_become=yes
 
 [nameservers]
-ns1 ansible_host=89.58.0.80
-ns2 ansible_host=89.58.3.54
+largo ansible_host=89.58.0.80
+zorin ansible_host=89.58.3.54

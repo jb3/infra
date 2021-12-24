@@ -3,12 +3,12 @@
 ** Components
 
 *** DNS
-DNS is provided by the `nameserver` group and role. It manages two authoritative DNS servers located at `ns1.jb3.dev` and `ns2.jb3.dev`.
+DNS is provided by the `nameserver` group and role. It manages two authoritative DNS servers located at `largo.jb3.dev` and `zorin.jb3.dev`.
 
 DNS servers are authoritative for the following zones:
 - jb3.dev
 
-Zones are signed using DNSSEC and keys are automatically generated if not present on the local machine. After DNS has been deployed the necessary DS records are downloaded from ns1.jb3.dev, it is only required to put the SHA256 hash at the registrar, not the shorter SHA1 hash.
+Zones are signed using DNSSEC and keys are automatically generated if not present on the local machine. After DNS has been deployed the necessary DS records are downloaded from largo.jb3.dev, it is only required to put the SHA256 hash at the registrar, not the shorter SHA1 hash.
 
 Eventually I'll write a blog post on this.
 

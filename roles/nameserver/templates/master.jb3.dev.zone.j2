@@ -3,15 +3,15 @@
 ; Records should be grouped by (type, resolved host, alphabetical label)
 
 $TTL    1h
-@   IN  SOA ns1.jb3.dev. joe.jb3.dev. (
+@   IN  SOA largo.jb3.dev. joe.jb3.dev. (
                             12 ; serial
                             3H ; refresh
                             15 ; retry
                             1w ; expire
                             3h ; min ttl
                         )
-    IN  NS      ns1.jb3.dev.
-    IN  NS      ns2.jb3.dev.
+    IN  NS      largo.jb3.dev.
+    IN  NS      zorin.jb3.dev.
 
 {% for hostname, host in hostvars.items() %}
 {{ hostname }}  IN  A  {{ host.ansible_host }}
@@ -25,6 +25,7 @@ modmail IN  A   202.61.228.148
 matrix  IN  A   202.61.228.148
 git     IN  A   202.61.228.148
 turn    IN  A   202.61.228.148
+nymr    IN  A   202.61.228.148
 
 ; AAAA records
 dns     IN  AAAA   2a0f:85c1:23::6969
