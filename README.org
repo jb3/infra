@@ -3,7 +3,7 @@
 ** Components
 
 *** DNS
-DNS is provided by the `nameserver` group and role. It manages two authoritative DNS servers located at `largo.jb3.dev` and `zorin.jb3.dev`.
+DNS is provided by the ~nameserver~ group and role. It manages two authoritative DNS servers located at ~largo.jb3.dev~ and ~zorin.jb3.dev~.
 
 DNS servers are authoritative for the following zones:
 - jb3.dev
@@ -14,10 +14,14 @@ Eventually I'll write a blog post on this.
 
 *** NGINX
 
-NGINX is installed and deployed to a single server using the `nginx` role. Configuration is automatically generated according to role variables defining static sites and reverse proxies.
+NGINX is installed and deployed to a single server using the ~nginx~ role. Configuration is automatically generated according to role variables defining static sites and reverse proxies.
 
 See the NGINX role for configuration and active sites. Soon TLS will be handled in this role/another similar role.
 
+*** Gitea
+
+The ~gitea~ role deploys a Gitea server to [[https://git.jb3.dev][git.jb3.dev]] for hosting personal projects that don't deserve a GitHub repository.
+
 *** Blog
 
-My blog ([[https://jb3.dev][jb3.dev]]) is deployed from the `blog` role in this repository. You can see the GitHub Action that does deployment [[https://github.com/jb3/blog/blob/main/.github/workflows/main.yml][here]], the site is built inside CI and rsync-ed to the production host.
+My blog ([[https://jb3.dev][jb3.dev]]) is deployed from the ~blog~ role in this repository. You can see the GitHub Action that does deployment [[https://github.com/jb3/blog/blob/main/.github/workflows/main.yml][here]], the site is built inside CI and ~rsync~ed to the production host.
