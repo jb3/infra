@@ -47,6 +47,8 @@
     name: /var/www/letsencrypt
     state: directory
     mode: '0774'
+    owner: www-data
+    group: www-data
 
 - name: check if certificate is present
   stat:

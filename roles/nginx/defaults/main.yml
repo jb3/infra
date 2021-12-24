@@ -23,3 +23,7 @@ sites:
   type: reverse-proxy
   domain: git.jb3.dev
   upstream: http://localhost:3000
+- name: nymr
+  type: reverse-proxy
+  domain: nymr.jb3.dev
+  upstream: http://127.0.0.1:5000
