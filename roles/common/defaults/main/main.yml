@@ -1,0 +1,7 @@
+users:
+  - name: joe
+    sudoer: true
+    keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsWRRueaTptJdR9fKHRYtnsRb6PuNnJbBNmPJIof/NHa5mXKRk49vgyWCUNQitlvwIesObLiL5suIcDAsWdq4gDrBWkwO8jRNRXUZ3vf52Wumqn6uJToB+N1PS8ledX1mhFkqciHK7ysXmkOXC99H9ddwIL/EDlD8XD6tjzzFePgMaUmeOdbhQwE28EfHlBO8xl41bOcCT9V/zMPz8NoV1gNlDE0xeIAygyTR3kbG/zLzFIe3ntnzDBGQnOIp6OlPCVxCAgfAm/jFLikRFeSnzwrGxNmuDnmyL9peih7Zd+9neUwfpZvQEcQJxAEAuMGcu7vNYtpiFqiZylCrhthKv joseph@thonkpad
+    password: '{{ ssh_passwords["joe"] }}'
+    comment: "Joe Banks"

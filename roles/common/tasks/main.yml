@@ -5,3 +5,47 @@
     line: "PasswordAuthentication no"
     state: present
   notify: restart ssh
+
+- name: set timezone to UTC
+  file:
+    src: /usr/share/zoneinfo/Etc/UTC
+    dest: /etc/localtime
+    mode: '0777'
+    owner: root
+    group: root
+  notify: restart systemd-timesyncd
+
+- name: Ensure 'machinist' group exists
+  group:
+    name: machinist
+    state: present
+
+- name: Ensure all administrators are created
+  no_log: true
+  user:
+    name: "{{ item['name'] }}"
+    comment: "{{ item['comment'] }}"
+    password: "{{ item['password'] }}"
+    groups: "{{ ['machinist'] if item['sudoer'] else [] }}"
+    shell: /bin/bash
+    state: present
+  with_items:
+    - "{{ users }}"
+
+- name: Ensure SSH key is added to all users
+  no_log: true
+  ansible.posix.authorized_key:
+    user: "{{ item['name'] }}"
+    state: present
+    exclusive: True
+    key: "{{ item['keys'] | join('\n') }}"
+  with_items:
+    - "{{ users }}"
+
+- name: Allow 'machinist' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%machinist'
+    line: '%machinist ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'

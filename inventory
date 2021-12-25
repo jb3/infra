@@ -4,7 +4,7 @@ stromberg ansible_host=89.58.24.140
 scaramanga ansible_host=202.61.228.148
 
 [routers]
-blofeld ansible_host=108.61.172.150 ansible_user=jb3 ansible_become=yes
+blofeld ansible_host=108.61.172.150
 
 [nameservers]
 largo ansible_host=89.58.0.80
