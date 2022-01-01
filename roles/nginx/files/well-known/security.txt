@@ -1,0 +1,15 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Canonical: https://jb3.dev/.well-known/security.txt
+Contact: mailto:security@jb3.dev
+Encryption: https://keybase.io/j03b/pgp_keys.asc
+Expires: 2030-01-01T00:00:01Z
+Preferred-Languages: en
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQS+3+LMjY9+dSbD3sTfyx6jnGbO6AUCYcesUgAKCRDfyx6jnGbO
+6PWfAQC8Gaxsn9CTZDUq8WjdWIsEkfKd+CDWn0zIRjfSHvaxIgEAzPVKx5NVGDvE
+mnCkc3CkVlNOgfKH5KgYYPkgc253LQI=
+=Z6p9
+-----END PGP SIGNATURE-----

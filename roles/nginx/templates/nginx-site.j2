@@ -1,6 +1,13 @@
 server {
     server_name {{ item.domain }};
 
+    location ^~ /.well-known/ {
+        alias {{ well_known_location }};
+        try_files $uri $uri/ =404;
+    }
+
+
+
     {% if item.type == "reverse-proxy" %}
         {% include "reverse-proxy.j2" %}
     {% elif item.type == "static" %}

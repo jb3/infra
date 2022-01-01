@@ -50,6 +50,13 @@
     owner: www-data
     group: www-data
 
+- name: copy well-known files to /var/www
+  ansible.posix.synchronize:
+    src: well-known
+    dest: /var/www
+    recursive: true
+    delete: true
+
 - name: check if certificate is present
   stat:
     path: '/etc/letsencrypt/live/{{ sites[0]["domain"] }}'
