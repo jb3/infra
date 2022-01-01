@@ -73,6 +73,7 @@
   file:
     path: "{{ playbook_dir }}/tsigs"
     state: directory
+    mode: '0770'
   run_once: true
   delegate_to: localhost
 
@@ -91,6 +92,7 @@
     content: "{{ item['stdout'] }}"
     dest: "{{ playbook_dir }}/tsigs/{{ item['item']['name'] }}.tsig"
     force: no
+    mode: '0770'
   with_items:
     - "{{ generated_tsigs['results'] }}"
 
