@@ -77,7 +77,7 @@
   delegate_to: localhost
 
 - name: tsig - generate tsigs
-  shell: tsig-keygen -a HMAC-SHA512 {{ item["name"] }}.
+  command: tsig-keygen -a HMAC-SHA512 {{ item["name"] }}.
   register: generated_tsigs
   run_once: true
   with_items:
@@ -155,4 +155,4 @@
     hex_chars: '0123456789ABCDEF'
 
 - name: dnssec - configure NSEC3 parameters
-  shell: rndc signing -nsec3param 1 0 10 {{ dnssec_salt[0] }} jb3.dev
+  command: rndc signing -nsec3param 1 0 10 {{ dnssec_salt[0] }} jb3.dev

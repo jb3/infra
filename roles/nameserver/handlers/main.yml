@@ -14,5 +14,5 @@
   when: apparmor_disable.changed
 
 - name: stop bind
-  shell: rndc stop
+  command: rndc stop
   listen: bind update
