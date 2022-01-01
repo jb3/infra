@@ -126,6 +126,18 @@
     state: directory
     mode: '0775'
 
+- name: grab copy of live dynamic DNS journals
+  find:
+    paths: /var/named
+    patterns: "*"
+  register: named_glob
+
+- name: delete DNS zone and all journals
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ named_glob.files }}"
+
 - name: generate new zone file
   template:
     src: master.jb3.dev.zone.j2

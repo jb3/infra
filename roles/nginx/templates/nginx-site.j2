@@ -12,6 +12,8 @@ server {
         {% include "reverse-proxy.j2" %}
     {% elif item.type == "static" %}
         {% include "static.j2" %}
+    {% elif item.type == "redirect" %}
+        return {{ item.code }} $scheme://{{ item.destination }}$request_uri;
     {% endif %}
 
     {% if "headers" in item %}

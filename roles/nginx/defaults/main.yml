@@ -32,3 +32,8 @@ sites:
   type: static
   domain: f.jb3.dev
   root: /var/www/f.jb3.dev
+- name: ddd
+  type: redirect
+  domain: ddd.jb3.dev
+  destination: ddd.seph.club
+  code: 307
