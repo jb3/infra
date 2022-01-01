@@ -9,3 +9,4 @@ dsset/
 
 # Ansible Vault credentials
 vault_passwords
+tsigs/

@@ -1,0 +1,8 @@
+tsigs:
+  - name: joe
+    restricted: false
+  - name: acme
+    restricted: true
+    to:
+      - type: txt
+        name: _acme-challenge.jb3.dev

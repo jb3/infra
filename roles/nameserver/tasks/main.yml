@@ -65,9 +65,34 @@
   file:
     path: /var/log/named
     group: bind
-    owner: root
+    owner: bind
     mode: '0775'
     state: directory
+
+- name: tsig - create local tsig directory
+  file:
+    path: "{{ playbook_dir }}/tsigs"
+    state: directory
+  run_once: true
+  delegate_to: localhost
+
+- name: tsig - generate tsigs
+  shell: tsig-keygen -a HMAC-SHA512 {{ item["name"] }}.
+  register: generated_tsigs
+  run_once: true
+  with_items:
+    - "{{ tsigs }}"
+
+- name: tsig - save non-existant tsigs locally
+  run_once: true
+  no_log: true
+  delegate_to: localhost
+  copy:
+    content: "{{ item['stdout'] }}"
+    dest: "{{ playbook_dir }}/tsigs/{{ item['item']['name'] }}.tsig"
+    force: no
+  with_items:
+    - "{{ generated_tsigs['results'] }}"
 
 - name: fetch kanye quotes
   uri:
@@ -79,82 +104,43 @@
     src: named.conf.j2
     dest: /etc/bind/named.conf
     mode: '0664'
-  notify: bind update
+  vars:
+    tsig_files: "{{ lookup('fileglob', playbook_dir + '/tsigs/*', wantlist=True) }}"
+  notify:
+    - bind update
+
+- name: dnssec - copy keys to remote
+  copy:
+    directory_mode: '0770'
+    mode: '0770'
+    owner: bind
+    group: bind
+    src: '{{ playbook_dir }}/keys'
+    dest: /etc/bind
 
 - name: ensure named configuration directory exists
   file:
     path: /var/named
     group: bind
-    owner: root
+    owner: bind
     state: directory
     mode: '0775'
 
-- name: create named staging directory
-  file:
-    path: /var/named-staging
-    group: bind
-    owner: root
-    mode: '0775'
-    state: directory
-
-- name: push zone config to staging
+- name: generate new zone file
   template:
     src: master.jb3.dev.zone.j2
-    dest: /var/named-staging/master.jb3.dev
-    owner: root
+    dest: /var/named/master.jb3.dev
+    owner: bind
     group: bind
     mode: '0775'
+  notify:
+    - bind update
 
-- name: dnssec - copy dnssec keys to remote
-  ansible.posix.synchronize:
-    mode: push
-    src: "{{ playbook_dir }}/keys"
-    dest: "/var/named-staging"
+- name: dnssec - generate random hexadecimal string for nsec3param
+  set_fact:
+    dnssec_salt: "{{ query('community.general.random_string', length=16, upper=false, lower=false, override_special=hex_chars, numbers=false) }}"
+  vars:
+    hex_chars: '0123456789ABCDEF'
 
-- name: dnssec - copy keys to staging directory
-  shell: mv /var/named-staging/keys/* /var/named-staging
-  when: true
-
-- name: dnssec - get key names
-  find:
-    paths: /var/named-staging
-    patterns: Kjb3.dev*.key
-  register: dnssec_keys
-
-- name: dnssec - generate random salt
-  shell: set -o pipefail && head -c 1000 /dev/urandom | sha1sum | cut -b 1-16
-  register: dnssec_salt
-  args:
-    executable: /bin/bash
-  when: true
-
-- name: dnssec - append DNSKEY includes to zone
-  lineinfile:
-    path: /var/named-staging/master.jb3.dev
-    line: "$INCLUDE {{ item.path | basename }}"
-  with_items: "{{ dnssec_keys.files }}"
-
-- name: dnssec - sign DNS zone file
-  command:
-    cmd: "dnssec-signzone -3 {{ dnssec_salt.stdout }} -N INCREMENT -o jb3.dev -t master.jb3.dev"
-    chdir: /var/named-staging
-  when: true
-
-- name: copy signed zone to production
-  copy:
-    remote_src: true
-    src: /var/named-staging/master.jb3.dev.signed
-    dest: /var/named/master.jb3.dev
-    mode: '0774'
-  notify: bind update
-
-- name: dnssec - fetch DS record set
-  fetch:
-    src: /var/named-staging/dsset-jb3.dev.
-    dest: dsset
-  run_once: true
-
-- name: delete named staging directory
-  file:
-    state: absent
-    path: /var/named-staging
+- name: dnssec - configure NSEC3 parameters
+  shell: rndc signing -nsec3param 1 0 10 {{ dnssec_salt[0] }} jb3.dev
