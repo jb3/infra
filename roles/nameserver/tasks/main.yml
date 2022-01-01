@@ -81,6 +81,7 @@
   command: tsig-keygen -a HMAC-SHA512 {{ item["name"] }}.
   register: generated_tsigs
   run_once: true
+  when: true
   with_items:
     - "{{ tsigs }}"
 
@@ -158,3 +159,4 @@
 
 - name: dnssec - configure NSEC3 parameters
   command: rndc signing -nsec3param 1 0 10 {{ dnssec_salt[0] }} jb3.dev
+  when: true
