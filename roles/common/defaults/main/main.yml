@@ -2,7 +2,7 @@ users:
   - name: joe
     sudoer: true
     keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsWRRueaTptJdR9fKHRYtnsRb6PuNnJbBNmPJIof/NHa5mXKRk49vgyWCUNQitlvwIesObLiL5suIcDAsWdq4gDrBWkwO8jRNRXUZ3vf52Wumqn6uJToB+N1PS8ledX1mhFkqciHK7ysXmkOXC99H9ddwIL/EDlD8XD6tjzzFePgMaUmeOdbhQwE28EfHlBO8xl41bOcCT9V/zMPz8NoV1gNlDE0xeIAygyTR3kbG/zLzFIe3ntnzDBGQnOIp6OlPCVxCAgfAm/jFLikRFeSnzwrGxNmuDnmyL9peih7Zd+9neUwfpZvQEcQJxAEAuMGcu7vNYtpiFqiZylCrhthKv joe@thonkpad
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCb/CPNY+f2aYAZlNDxOIoTXPO3DUAWSVsJM92X20mSSAgU6qabWQbpFh2U/51vwyfzJj9AfJD75IKCYsRC5caUomXCF72bQLpfbsYDnY6JFL6BtVHlFdw7ztKbeiH2Nt7VDhCLXvrMjokf+ieWgr5lCXixOyCtg16aMQID4l4XIehp7AoOb7B3VEckCfsmhk6Kzw262aPBcZOFanb0KIaakO2+aI/vPQrYCmLnI/F5AVAQippdT/tlFnXZXNq8sukLmXOOxR9UBya7G6EeCoolWAwXxMRmEAqnn5EbOuFaVyc73ccW9sEeVfZBtIeDOe5p9CLi0Cq5j1x3NguA0t3lGq347xTYHpTxjXLmUt8vUrjnpk6pYPIqQW6kcHc/OsOzrx1I+xKx4xKV9jdjvhyxPp+6ibnTIcXO2mCUXPmj/kH0zIrmP62sQg0hMyYC4CEeQAFg2aWQ3ZlCWQXK8cPOf8PiDsVBxLh22l5rNH0mDddYj80w7ijbistlWa62SEs= joe@thonkpad
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPyNdEOw7tfOHWCM0w2A7UzspnYYpNiF+nak51dcx3d7 joe@ivo
     password: '{{ ssh_passwords["joe"] }}'
     comment: "Joe Banks"
