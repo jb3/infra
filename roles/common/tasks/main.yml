@@ -42,6 +42,18 @@
   with_items:
     - "{{ users }}"
 
+- name: Ensure .hushlogin is added to all home directories
+  no_log: true
+  copy:
+    content: ''
+    force: no
+    dest: "/home/{{ item['name'] }}/.hushlogin"
+    group: "{{ item['name'] }}"
+    owner: "{{ item['name'] }}"
+    mode: '0700'
+  with_items:
+    - "{{ users }}"
+
 - name: Allow 'machinist' group to have passwordless sudo
   lineinfile:
     dest: /etc/sudoers
