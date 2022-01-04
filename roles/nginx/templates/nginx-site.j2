@@ -3,6 +3,7 @@ server {
 
     location ^~ /.well-known/ {
         alias {{ well_known_location }};
+        more_set_headers 'Access-Control-Allow-Origin: *';
         try_files $uri $uri/ =404;
     }
 
