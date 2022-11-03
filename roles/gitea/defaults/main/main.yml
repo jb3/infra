@@ -1,5 +1,5 @@
 gitea_binary_url: https://github.com/go-gitea/gitea/releases/download/v1.15.9/gitea-1.15.9-linux-amd64
-gitea_checksum: bc3bbdfa8d93faf18d6dc6f6cd36425b0d22e3a0395f9d90373519d67a17a916
+gitea_checksum: sha256:{{ gitea_binary_url }}.sha256
 
 # Gitea config varibles
 gitea_security_token: (( encrypted_gitea_security_token ))
