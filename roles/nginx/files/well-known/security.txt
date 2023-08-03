@@ -3,7 +3,7 @@ Hash: SHA256
 
 Canonical: https://jb3.dev/.well-known/security.txt
 Contact: mailto:security@jb3.dev
-Encryption: https://keybase.io/j03b/pgp_keys.asc
+Encryption: openpgp4fpr:509CDFFC2D0783A33CF87D2B703EE21DE4D4D9C9
 Expires: 2030-01-01T00:00:01Z
 Preferred-Languages: en
 -----BEGIN PGP SIGNATURE-----
