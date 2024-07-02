@@ -10,7 +10,7 @@
   file:
     src: /usr/share/zoneinfo/Etc/UTC
     dest: /etc/localtime
-    mode: '0777'
+    mode: '0644'
     owner: root
     group: root
   notify: restart systemd-timesyncd
@@ -28,7 +28,6 @@
     password: "{{ item['password'] }}"
     groups: "{{ ['machinist'] if item['sudoer'] else [] }}"
     append: yes
-    shell: "{{ user_shell }}"
     state: present
   with_items:
     - "{{ users }}"
