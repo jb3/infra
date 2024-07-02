@@ -82,6 +82,14 @@
   args:
     creates: /etc/letsencrypt/live/{{ nginx_sites[0]["domain"] }}
 
+- name: Copy HTPASSWD file
+  copy:
+    content: "{{ nginx_htpasswd }}"
+    dest: /etc/nginx/htpasswd
+    mode: "0600"
+    owner: nginx
+    group: nginx
+
 - name: Generate nginx configurations
   ansible.builtin.template:
     src: nginx-site.j2
