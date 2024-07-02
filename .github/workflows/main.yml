@@ -24,7 +24,6 @@ jobs:
 
       - name: Run ansible lint
         run: |
-          cd ansible
           # Remove any Vaulted files and Vault configuration
           grep -R '$ANSIBLE_VAULT;' --files-with-matches . | xargs rm
           sed --in-place '/vault_password_file/d' ansible.cfg
