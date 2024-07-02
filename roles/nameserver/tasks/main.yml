@@ -107,6 +107,7 @@
     mode: "0664"
   vars:
     tsig_files: "{{ lookup('fileglob', playbook_dir + '/tsigs/*', wantlist=True) }}"
+    secondaries: "{{ groups['dns'] | map('extract', hostvars, ['ansible_host']) | reject('==', ansible_host) | join('; ') }}"
   notify:
     - Named update
 
