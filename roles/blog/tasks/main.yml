@@ -1,5 +1,0 @@
-- name: rsync blog build to /var/www/jb3.dev
-  ansible.posix.synchronize:
-    src: build/
-    dest: /var/www/jb3.dev
-    delete: yes

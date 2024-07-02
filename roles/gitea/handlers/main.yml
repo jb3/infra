@@ -1,4 +1,0 @@
-- name: restart gitea
-  service:
-    name: gitea.service
-    state: restarted
