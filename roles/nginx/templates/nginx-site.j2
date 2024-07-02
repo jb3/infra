@@ -1,14 +1,6 @@
 server {
     server_name {{ item.domain }};
 
-    location ^~ /.well-known/ {
-        alias {{ well_known_location }};
-        more_set_headers 'Access-Control-Allow-Origin: *';
-        try_files $uri $uri/ =404;
-    }
-
-
-
     {% if item.type == "reverse-proxy" %}
         {% include "reverse-proxy.j2" %}
     {% elif item.type == "static" %}
@@ -19,7 +11,7 @@ server {
 
     {% if "headers" in item %}
         {% for header, value in item["headers"].items() %}
-            more_set_headers "{{ header }}: {{ value }}";
+            add_header {{ header }} '{{ value }}';
         {% endfor %}
     {% endif %}
 
@@ -36,6 +28,4 @@ server {
             listen [::]:{{ port["port"] }} {{ "ssl http2" if port["tls"] else None }} default_server;
         {% endfor %}
     {% endif %}
-
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 }

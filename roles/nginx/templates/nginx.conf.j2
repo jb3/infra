@@ -1,74 +1,71 @@
-user www-data;
+user nginx;
 worker_processes auto;
+error_log /var/log/nginx/error.log;
 pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
+
+# Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.
+include /usr/share/nginx/modules/*.conf;
 
 events {
-	worker_connections 768;
+    worker_connections 1024;
 }
 
 http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
 
-	##
-	# Basic Settings
-	##
+    access_log  /var/log/nginx/access.log  main;
 
-	sendfile on;
-	tcp_nopush on;
-	types_hash_max_size 2048;
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    server_tokens       off;
+    types_hash_max_size 4096;
 
-    server_tokens off;
-
-	include /etc/nginx/mime.types;
-	default_type application/octet-stream;
-
-	##
-	# SSL Settings
-	##
-
-	ssl_protocols TLSv1.2 TLSv1.3;
-	ssl_prefer_server_ciphers on;
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
     ssl_stapling on;
     ssl_stapling_verify on;
     resolver 1.1.1.1 1.0.0.1;
-
-	access_log /var/log/nginx/access.log;
-	error_log /var/log/nginx/error.log;
-
-	gzip on;
-
-	include /etc/nginx/conf.d/*.conf;
-	include /etc/nginx/sites-enabled/*;
-
-    server {
-        listen 80 default_server;
-
-        server_name _;
-
-        location ^~ /.well-known/acme-challenge/ {
-          root {{ tls_well_known_location }};
-        }
-
-        location / {
-          return 301 https://$host$request_uri;
-        }
-    }
 
     ##
     # Extra Headers
     ##
 
-    more_set_headers 'X-Frame-Options: DENY';
-    more_set_headers 'X-XSS-Protection: 1; mode=block';
-    more_set_headers 'X-Content-Type-Options: nosniff';
-    more_set_headers 'Referrer-Policy: no-referrer';
-    more_set_headers 'Strict-Transport-Security: max-age=31536000; includeSubDomains;';
+    add_header X-Frame-Options DENY;
+    add_header X-XSS-Protection '1; mode=block';
+    add_header X-Content-Type-Options nosniff;
+    add_header Referrer-Policy no-referrer;
+    add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains;';
 
     ##
     # Observability Headers
     ##
 
-    more_set_headers 'NEL: {"report_to":"default","max_age":600,"include_subdomains":true,"success_fraction": 0.5}';
-    more_set_headers 'Report-To: {"group":"default","max_age":600,"endpoints":[{"url":"https://joebanks.report-uri.com/a/d/g"}],"include_subdomains":true}';
-    more_set_headers 'Expect-CT: max-age=86400, enforce, report-uri="https://joebanks.report-uri.com/r/d/ct/enforce"';
-}
+    add_header NEL '{"report_to":"default","max_age":600,"include_subdomains":true,"success_fraction": 0.5}';
+    add_header Report-To '{"group":"default","max_age":600,"endpoints":[{"url":"https://joebanks.report-uri.com/a/d/g"}],"include_subdomains":true}';
+    add_header Expect-CT 'max-age=86400, enforce, report-uri="https://joebanks.report-uri.com/r/d/ct/enforce"';
+
+
+    # Load modular configuration files from the /etc/nginx/conf.d directory.
+    # See http://nginx.org/en/docs/ngx_core_module.html#include
+    # for more information.
+    include /etc/nginx/conf.d/*;
+
+    server {
+        listen       80;
+        listen       [::]:80;
+        server_name  _;
+        root         /usr/share/nginx/html;
+
+      	location ^~ /.well-known/acme-challenge/ {
+          root {{ tls_well_known_location }};
+        }
+
+	location / {
+          return 301 https://$host$request_uri;
+        }
+    }
+ }

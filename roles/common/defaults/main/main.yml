@@ -6,3 +6,9 @@ users:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPyNdEOw7tfOHWCM0w2A7UzspnYYpNiF+nak51dcx3d7 joe@ivo
     password: '{{ ssh_passwords["joe"] }}'
     comment: "Joe Banks"
+  - name: ci
+    sudoer: false
+    keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFEUjgY7lb+W+YMwas7f3MgKQcsOLLh0RDhgvogt3sjd ci@ivo
+    password: '{{ ssh_passwords["ci"] }}'
+    comment: "CI User"

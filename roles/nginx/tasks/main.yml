@@ -10,24 +10,18 @@
 #    Y8888P   `Y88P' YP   YP 88   YD Y888888P `8888Y'    YP     Y888P  Y888888P    YP
 
 - name: install nginx
-  apt:
+  package:
     name: nginx
     state: present
   notify: nginx enable
 
 - name: install certbot
-  apt:
+  package:
     name: certbot
     state: present
 
-- name: install nginx-extras
-  apt:
-    name: nginx-extras
-    state: present
-  notify: nginx enable
-
 - name: install rsync
-  apt:
+  package:
     name: rsync
     state: present
 
@@ -44,18 +38,11 @@
 
 - name: check letsencrypt webroot exists
   file:
-    name: /var/www/letsencrypt
+    name: "{{ tls_well_known_location }}"
     state: directory
     mode: '0774'
-    owner: www-data
-    group: www-data
-
-- name: copy well-known files to /var/www
-  ansible.posix.synchronize:
-    src: well-known
-    dest: /var/www
-    recursive: true
-    delete: true
+    owner: nginx
+    group: nginx
 
 - name: check if certificate is present
   stat:
@@ -63,11 +50,11 @@
   register: cert_live
 
 - name: clear config dir if cert does not exist
-  file: path=/etc/nginx/sites-enabled state=absent
+  file: path=/etc/nginx/conf.d state=absent
   when: not cert_live.stat.exists
 
 - name: create config dir again if deleted
-  file: path=/etc/nginx/sites-enabled state=directory mode=0774
+  file: path=/etc/nginx/conf.d state=directory mode=0774
   when: not cert_live.stat.exists
 
 - name: restart nginx if config had to be wiped
@@ -92,7 +79,7 @@
 - name: generate nginx configurations
   template:
     src: nginx-site.j2
-    dest: /etc/nginx/sites-enabled/{{ item.name }}
+    dest: /etc/nginx/conf.d/{{ item.name }}
     mode: '0774'
   with_items:
     - "{{ sites }}"

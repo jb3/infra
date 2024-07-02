@@ -1,18 +1,11 @@
 tls_email: joe@jb3.dev
-tls_well_known_location: /var/www/letsencrypt
-well_known_location: /var/www/well-known/
+tls_well_known_location: /usr/share/nginx/letsencrypt
 
 sites:
 - name: default
   type: static
   domain: jb3.dev
-  root: /var/www/jb3.dev
-  headers:
-    Content-Security-Policy: default-src 'self' https://www.youtube.com/ 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;
-- name: modmail
-  type: reverse-proxy
-  domain: modmail.jb3.dev
-  upstream: http://localhost:8890
+  root: /usr/share/nginx/jb3.dev
 - name: matrix
   type: reverse-proxy
   domain: matrix.jb3.dev
@@ -20,20 +13,7 @@ sites:
   additional_ports:
     - port: 8448
       tls: true
-- name: gitea
+- name: znc
   type: reverse-proxy
-  domain: git.jb3.dev
-  upstream: http://localhost:3000
-- name: nymr
-  type: reverse-proxy
-  domain: nymr.jb3.dev
-  upstream: http://127.0.0.1:5000
-- name: files
-  type: static
-  domain: f.jb3.dev
-  root: /var/www/f.jb3.dev
-- name: ddd
-  type: redirect
-  domain: ddd.jb3.dev
-  destination: ddd.seph.club
-  code: 307
+  domain: znc.jb3.dev
+  upstream: https://localhost:1500

@@ -14,4 +14,4 @@
   roles:
     - nginx
   tags:
-    - nginx
+    - web

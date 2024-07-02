@@ -1,6 +1,6 @@
 options {
     directory "/var/named";
-    key-directory "/etc/bind/keys";
+    key-directory "/etc/named/keys";
 
     version "{{ kanye_quote.json['quote'] }}";
 
@@ -10,7 +10,6 @@ options {
 
     allow-transfer { none; };
 
-    dnssec-enable yes;
     dnssec-validation yes;
 };
 

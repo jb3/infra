@@ -1,18 +1,15 @@
-- name: bind enable
+- name: named enable
   service:
-    name: bind9
+    name: named
     enabled: yes
     state: started
 
-- name: bind update
+- name: named update
   service:
-    name: bind9
+    name: named
     state: reloaded
 
-- name: disable named apparmor
-  command: apparmor_parser -R /etc/apparmor.d/usr.sbin.named
-  when: apparmor_disable.changed
-
-- name: stop bind
-  command: rndc stop
-  listen: bind update
+- name: reload firewalld
+  service:
+    name: firewalld
+    state: reloaded

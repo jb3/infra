@@ -1,22 +1,17 @@
 - name: install bind
-  apt:
-    name: bind9
+  package:
+    name: bind
     state: present
-  notify: bind enable
+  notify: named enable
 
-- name: install rsync
-  apt:
-    name: rsync
-    state: present
-
-- name: disable named apparmor (symlink)
-  file:
-    src: /etc/apparmor.d/usr.sbin.named
-    dest: /etc/apparmor.d/disable/usr.sbin.named
-    state: link
+- name: add firewall exception for DNS
+  firewalld:
+    service: dns
+    permanent: true
+    state: enabled
   notify:
-    - disable named apparmor
-
+    - reload firewalld
+    
 - name: dnssec - check for keys
   delegate_to: localhost
   stat:
@@ -64,8 +59,8 @@
 - name: ensure bind log dir
   file:
     path: /var/log/named
-    group: bind
-    owner: bind
+    group: named
+    owner: named
     mode: '0775'
     state: directory
 
@@ -105,27 +100,27 @@
 - name: bind config
   template:
     src: named.conf.j2
-    dest: /etc/bind/named.conf
+    dest: /etc/named.conf
     mode: '0664'
   vars:
     tsig_files: "{{ lookup('fileglob', playbook_dir + '/tsigs/*', wantlist=True) }}"
   notify:
-    - bind update
+    - named update
 
 - name: dnssec - copy keys to remote
   copy:
     directory_mode: '0770'
     mode: '0770'
-    owner: bind
-    group: bind
+    owner: named
+    group: named
     src: '{{ playbook_dir }}/keys'
-    dest: /etc/bind
+    dest: /etc/named
 
 - name: ensure named configuration directory exists
   file:
     path: /var/named
-    group: bind
-    owner: bind
+    group: named
+    owner: named
     state: directory
     mode: '0775'
 
@@ -145,18 +140,35 @@
   template:
     src: master.jb3.dev.zone.j2
     dest: /var/named/master.jb3.dev
-    owner: bind
-    group: bind
-    mode: '0775'
+    owner: named
+    group: named
+    mode: '0644'
   notify:
-    - bind update
+    - named update
 
-- name: dnssec - generate random hexadecimal string for nsec3param
-  set_fact:
-    dnssec_salt: "{{ query('community.general.random_string', length=16, upper=false, lower=false, override_special=hex_chars, numbers=false) }}"
-  vars:
-    hex_chars: '0123456789ABCDEF'
+- name: rndc - check for rndc configuration
+  stat:
+    path: /etc/rndc.key
+  register: rndc_configuration
+
+- name: rndc - generate rndc configuration
+  command: rndc-confgen -a
+  register: rndc_generated
+  when: not rndc_configuration.stat.exists
+
+- name: rndc - ensure ownership of config key
+  file:
+    path: /etc/rndc.key
+    owner: named
+    group: named
+    mode: '0600'
+
+- name: named - enable named
+  service:
+    name: named
+    state: started
+    enabled: yes
 
 - name: dnssec - configure NSEC3 parameters
-  command: rndc signing -nsec3param 1 0 10 {{ dnssec_salt[0] }} jb3.dev
+  command: rndc signing -nsec3param 1 0 0 - jb3.dev
   when: true

@@ -7,6 +7,9 @@ tmp/
 keys/
 dsset/
 
+# SSH Deploy Keys
+ssh-keys/
+
 # Ansible Vault credentials
 vault_passwords
 tsigs/
