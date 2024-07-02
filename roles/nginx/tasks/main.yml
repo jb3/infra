@@ -83,7 +83,7 @@
     creates: /etc/letsencrypt/live/{{ nginx_sites[0]["domain"] }}
 
 - name: Copy HTPASSWD file
-  copy:
+  ansible.builtin.copy:
     content: "{{ nginx_htpasswd }}"
     dest: /etc/nginx/htpasswd
     mode: "0600"
