@@ -1,5 +1,4 @@
 ---
-
 - name: Install nginx
   ansible.builtin.package:
     name: nginx
@@ -26,7 +25,7 @@
   notify: Nginx reload
 
 - name: Copy RFC2136 credentials to Let's Encrypt directory
-  template:
+  ansible.builtin.template:
     src: rfc2136.ini.j2
     dest: "{{ nginx_tls_rfc2136_location }}"
     owner: root
