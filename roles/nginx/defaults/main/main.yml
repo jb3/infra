@@ -18,3 +18,8 @@ nginx_sites:
     type: reverse-proxy
     domain: znc.jb3.dev
     upstream: https://localhost:1500
+  - name: leacs
+    type: static
+    domain: leacs.jb3.dev
+    root: /usr/share/nginx/leacs
+    authenticated: true
