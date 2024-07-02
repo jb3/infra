@@ -33,6 +33,7 @@
     cmd: dnssec-keygen -3 -a RSASHA256 -b 2048 -n ZONE jb3.dev
     chdir: /tmp/keys
   when: not dnssec_keys.stat.exists
+  changed_when: true
   run_once: true
 
 - name: Dnssec - generate KSK
@@ -40,6 +41,7 @@
     cmd: dnssec-keygen -3 -f KSK -a RSASHA256 -b 4096 -n ZONE jb3.dev
     chdir: /tmp/keys
   when: not dnssec_keys.stat.exists
+  changed_when: true
   run_once: true
 
 - name: Dnssec - fetch generated keys
@@ -77,7 +79,7 @@
   ansible.builtin.command: tsig-keygen -a HMAC-SHA512 {{ item["name"] }}.
   register: generated_tsigs
   run_once: true
-  when: true
+  changed_when: true
   with_items:
     - "{{ nameserver_tsigs }}"
 
@@ -147,15 +149,11 @@
   notify:
     - Named update
 
-- name: Rndc - check for rndc configuration
-  ansible.builtin.stat:
-    path: /etc/rndc.key
-  register: rndc_configuration
-
 - name: Rndc - generate rndc configuration
   ansible.builtin.command: rndc-confgen -a
   register: rndc_generated
-  when: not rndc_configuration.stat.exists
+  args:
+    creates: /etc/rndc.key
 
 - name: Rndc - ensure ownership of config key
   ansible.builtin.file:
@@ -172,4 +170,5 @@
 
 - name: Dnssec - configure NSEC3 parameters
   ansible.builtin.command: rndc signing -nsec3param 1 0 0 - jb3.dev
+  changed_when: true
   when: true
