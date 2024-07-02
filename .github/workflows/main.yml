@@ -12,7 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Lint Ansible playbooks
-        uses: ansible/ansible-lint@main
+      - name: Install Python Dependencies
+        uses: HassanAbouelela/actions/setup-python@setup-python_v1.6.0
+        with:
+          python_version: '3.12'
+
+      - name: Install Ansible Lint
+        run: pip install ansible-lint
+
+      - name: Run ansible lint
+        run: |
+          cd ansible
+          # Remove any Vaulted files and Vault configuration
+          grep -R '$ANSIBLE_VAULT;' --files-with-matches . | xargs rm
+          sed --in-place '/vault_password_file/d' ansible.cfg
+          ansible-lint      - name: Create Vault password file
