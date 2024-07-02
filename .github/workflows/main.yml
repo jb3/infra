@@ -15,9 +15,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Python Dependencies
-        uses: HassanAbouelela/actions/setup-python@setup-python_v1.6.0
+        uses: actions/setup-python@v5
         with:
-          python_version: '3.12'
+          python-version: '3.12'
 
       - name: Install Ansible Lint
         run: pip install ansible-lint
