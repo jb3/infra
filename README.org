@@ -20,6 +20,6 @@ See the NGINX role for configuration and active sites. TLS certificates are curr
 
 *** Blog
 
-My blog ([[jb3.dev][jb3.dev]]) is hosted by the above NGINX instance. It is deployed via ~rsync~ over the Tailscale network that all hosts are a member of.
+My blog ([[https://jb3.dev][jb3.dev]]) is hosted by the above NGINX instance. It is deployed via ~rsync~ over the Tailscale network that all hosts are a member of.
 
 You can find that workflow [[https://github.com/jb3/blog/blob/main/.github/workflows/deploy.yaml][here]].
