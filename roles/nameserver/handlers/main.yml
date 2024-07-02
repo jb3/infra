@@ -1,15 +1,16 @@
-- name: named enable
-  service:
+---
+- name: Named enable
+  ansible.builtin.service:
     name: named
-    enabled: yes
+    enabled: true
     state: started
 
-- name: named update
-  service:
+- name: Named update
+  ansible.builtin.service:
     name: named
     state: reloaded
 
-- name: reload firewalld
-  service:
+- name: Reload firewalld
+  ansible.builtin.service:
     name: firewalld
     state: reloaded

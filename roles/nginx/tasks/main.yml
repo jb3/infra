@@ -1,3 +1,4 @@
+---
 #######
 ####### Major credit to my brother from another mother for the Let's Encrypt configurations:
 #######
@@ -9,62 +10,67 @@
 #    db. 88  Y8b  d8 88   88 88 `88.   .88.   db   8D    88    88. ~8~   .88.      88
 #    Y8888P   `Y88P' YP   YP 88   YD Y888888P `8888Y'    YP     Y888P  Y888888P    YP
 
-- name: install nginx
-  package:
+- name: Install nginx
+  ansible.builtin.package:
     name: nginx
     state: present
-  notify: nginx enable
+  notify: Nginx enable
 
-- name: install certbot
-  package:
+- name: Install certbot
+  ansible.builtin.package:
     name: certbot
     state: present
 
-- name: install rsync
-  package:
+- name: Install rsync
+  ansible.builtin.package:
     name: rsync
     state: present
 
-- name: install nginx configuration
-  template:
+- name: Install nginx configuration
+  ansible.builtin.template:
     src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
-    mode: '0774'
-  notify: nginx reload
+    mode: "0774"
+  notify: Nginx reload
 
-- name: generate list of domains to generate certificates for
-  set_fact:
+- name: Generate list of domains to generate certificates for
+  ansible.builtin.set_fact:
     domains: "{{ sites | map(attribute='domain') | list }}"
 
-- name: check letsencrypt webroot exists
-  file:
+- name: Check letsencrypt webroot exists
+  ansible.builtin.file:
     name: "{{ tls_well_known_location }}"
     state: directory
-    mode: '0774'
+    mode: "0774"
     owner: nginx
     group: nginx
 
-- name: check if certificate is present
-  stat:
-    path: '/etc/letsencrypt/live/{{ sites[0]["domain"] }}'
+- name: Check if certificate is present
+  ansible.builtin.stat:
+    path: /etc/letsencrypt/live/{{ sites[0]["domain"] }}
   register: cert_live
 
-- name: clear config dir if cert does not exist
-  file: path=/etc/nginx/conf.d state=absent
+- name: Clear config dir if cert does not exist
+  ansible.builtin.file:
+    path: /etc/nginx/conf.d
+    state: absent
   when: not cert_live.stat.exists
 
-- name: create config dir again if deleted
-  file: path=/etc/nginx/conf.d state=directory mode=0774
+- name: Create config dir again if deleted
+  ansible.builtin.file:
+    path: /etc/nginx/conf.d
+    state: directory
+    mode: "0774"
   when: not cert_live.stat.exists
 
-- name: restart nginx if config had to be wiped
-  service:
+- name: Restart nginx if config had to be wiped
+  ansible.builtin.service:
     name: nginx
     state: restarted
   when: not cert_live.stat.exists
 
-- name: provision TLS certificates for all configured domains
-  command: >-
+- name: Provision TLS certificates for all configured domains
+  ansible.builtin.command: >-
     /usr/bin/certbot
     --agree-tos
     --non-interactive
@@ -76,17 +82,17 @@
   args:
     creates: /etc/letsencrypt/live/{{ sites[0]["domain"] }}
 
-- name: generate nginx configurations
-  template:
+- name: Generate nginx configurations
+  ansible.builtin.template:
     src: nginx-site.j2
     dest: /etc/nginx/conf.d/{{ item.name }}
-    mode: '0774'
+    mode: "0774"
   with_items:
     - "{{ sites }}"
-  notify: nginx reload
+  notify: Nginx reload
 
-- name: reload nginx after certificate renewal
-  copy:
+- name: Reload nginx after certificate renewal
+  ansible.builtin.copy:
     content: |
       #!/bin/sh
       set -ex
@@ -95,4 +101,4 @@
     dest: /etc/letsencrypt/renewal-hooks/deploy/reload-nginx
     owner: root
     group: root
-    mode: 0500
+    mode: "0500"

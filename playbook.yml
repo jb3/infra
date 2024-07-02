@@ -1,16 +1,20 @@
-- hosts: all
+---
+- name: Deploy common services
+  hosts: all
   roles:
     - common
   tags:
     - common
 
-- hosts: dns
+- name: Deploy nameservers to DNS hosts
+  hosts: dns
   roles:
     - nameserver
   tags:
     - dns
 
-- hosts: web
+- name: Deploy web software to webservers
+  hosts: web
   roles:
     - nginx
   tags:

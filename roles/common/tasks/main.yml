@@ -1,33 +1,34 @@
-- name: disable password authentication (SSH)
-  lineinfile:
+---
+- name: Disable password authentication (SSH)
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
-    regexp: "^PasswordAuthentication"
-    line: "PasswordAuthentication no"
+    regexp: ^PasswordAuthentication
+    line: PasswordAuthentication no
     state: present
-  notify: restart ssh
+  notify: Restart ssh
 
-- name: set timezone to UTC
-  file:
+- name: Set timezone to UTC
+  ansible.builtin.file:
     src: /usr/share/zoneinfo/Etc/UTC
     dest: /etc/localtime
-    mode: '0644'
+    mode: "0644"
     owner: root
     group: root
-  notify: restart systemd-timesyncd
+  notify: Restart systemd-timesyncd
 
 - name: Ensure 'machinist' group exists
-  group:
+  ansible.builtin.group:
     name: machinist
     state: present
 
 - name: Ensure all administrators are created
   no_log: true
-  user:
+  ansible.builtin.user:
     name: "{{ item['name'] }}"
     comment: "{{ item['comment'] }}"
     password: "{{ item['password'] }}"
     groups: "{{ ['machinist'] if item['sudoer'] else [] }}"
-    append: yes
+    append: true
     state: present
   with_items:
     - "{{ users }}"
@@ -37,27 +38,27 @@
   ansible.posix.authorized_key:
     user: "{{ item['name'] }}"
     state: present
-    exclusive: True
+    exclusive: true
     key: "{{ item['keys'] | join('\n') }}"
   with_items:
     - "{{ users }}"
 
 - name: Ensure .hushlogin is added to all home directories
   no_log: true
-  copy:
-    content: ''
-    force: no
-    dest: "/home/{{ item['name'] }}/.hushlogin"
+  ansible.builtin.copy:
+    content: ""
+    force: false
+    dest: /home/{{ item['name'] }}/.hushlogin
     group: "{{ item['name'] }}"
     owner: "{{ item['name'] }}"
-    mode: '0700'
+    mode: "0700"
   with_items:
     - "{{ users }}"
 
 - name: Allow 'machinist' group to have passwordless sudo
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^%machinist'
-    line: '%machinist ALL=(ALL) NOPASSWD: ALL'
-    validate: 'visudo -cf %s'
+    regexp: ^%machinist
+    line: "%machinist ALL=(ALL) NOPASSWD: ALL"
+    validate: visudo -cf %s
