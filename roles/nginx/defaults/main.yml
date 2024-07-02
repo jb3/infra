@@ -1,8 +1,8 @@
 ---
-tls_email: joe@jb3.dev
-tls_well_known_location: /usr/share/nginx/letsencrypt
+nginx_tls_email: joe@jb3.dev
+nginx_tls_well_known_location: /usr/share/nginx/letsencrypt
 
-sites:
+nginx_sites:
   - name: default
     type: static
     domain: jb3.dev

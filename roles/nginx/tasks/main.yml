@@ -35,11 +35,11 @@
 
 - name: Generate list of domains to generate certificates for
   ansible.builtin.set_fact:
-    domains: "{{ sites | map(attribute='domain') | list }}"
+    domains: "{{ nginx_sites | map(attribute='domain') | list }}"
 
 - name: Check letsencrypt webroot exists
   ansible.builtin.file:
-    name: "{{ tls_well_known_location }}"
+    name: "{{ nginx_tls_well_known_location }}"
     state: directory
     mode: "0774"
     owner: nginx
@@ -47,7 +47,7 @@
 
 - name: Check if certificate is present
   ansible.builtin.stat:
-    path: /etc/letsencrypt/live/{{ sites[0]["domain"] }}
+    path: /etc/letsencrypt/live/{{ nginx_sites[0]["domain"] }}
   register: cert_live
 
 - name: Clear config dir if cert does not exist
@@ -74,13 +74,13 @@
     /usr/bin/certbot
     --agree-tos
     --non-interactive
-    --email {{ tls_email }}
+    --email {{ nginx_tls_email }}
     --authenticator webroot
-    --webroot-path {{ tls_well_known_location | quote }}
+    --webroot-path {{ nginx_tls_well_known_location | quote }}
     --domains {{ domains | join(",") | quote }}
     certonly
   args:
-    creates: /etc/letsencrypt/live/{{ sites[0]["domain"] }}
+    creates: /etc/letsencrypt/live/{{ nginx_sites[0]["domain"] }}
 
 - name: Generate nginx configurations
   ansible.builtin.template:
@@ -88,7 +88,7 @@
     dest: /etc/nginx/conf.d/{{ item.name }}
     mode: "0774"
   with_items:
-    - "{{ sites }}"
+    - "{{ nginx_sites }}"
   notify: Nginx reload
 
 - name: Reload nginx after certificate renewal

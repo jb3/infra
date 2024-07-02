@@ -1,5 +1,5 @@
 ---
-tsigs:
+nameserver_tsigs:
   - name: joe
     restricted: false
   - name: acme

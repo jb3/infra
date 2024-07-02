@@ -61,7 +61,7 @@ http {
         root         /usr/share/nginx/html;
 
       	location ^~ /.well-known/acme-challenge/ {
-          root {{ tls_well_known_location }};
+          root {{ nginx_tls_well_known_location }};
         }
 
 	location / {

@@ -23,7 +23,7 @@ zone "jb3.dev." {
     inline-signing yes;
     file "master.jb3.dev";
     update-policy {
-     {% for tsig in tsigs %}
+     {% for tsig in nameserver_tsigs %}
         {% if tsig["restricted"] %}
             {% for label in tsig["to"] %}
                 grant {{ tsig["name"] }}. name {{ label["name"] }}. {{ label["type"] }};

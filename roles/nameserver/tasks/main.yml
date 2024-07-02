@@ -79,7 +79,7 @@
   run_once: true
   when: true
   with_items:
-    - "{{ tsigs }}"
+    - "{{ nameserver_tsigs }}"
 
 - name: Tsig - save non-existant tsigs locally
   run_once: true

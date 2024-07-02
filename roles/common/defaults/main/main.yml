@@ -1,5 +1,5 @@
 ---
-users:
+common_users:
   - name: joe
     sudoer: true
     keys:

@@ -31,7 +31,7 @@
     append: true
     state: present
   with_items:
-    - "{{ users }}"
+    - "{{ common_users }}"
 
 - name: Ensure SSH key is added to all users
   no_log: true
@@ -41,7 +41,7 @@
     exclusive: true
     key: "{{ item['keys'] | join('\n') }}"
   with_items:
-    - "{{ users }}"
+    - "{{ common_users }}"
 
 - name: Ensure .hushlogin is added to all home directories
   no_log: true
@@ -53,7 +53,7 @@
     owner: "{{ item['name'] }}"
     mode: "0700"
   with_items:
-    - "{{ users }}"
+    - "{{ common_users }}"
 
 - name: Allow 'machinist' group to have passwordless sudo
   ansible.builtin.lineinfile:
