@@ -60,10 +60,6 @@ http {
         server_name  _;
         root         /usr/share/nginx/html;
 
-      	location ^~ /.well-known/acme-challenge/ {
-          root {{ nginx_tls_well_known_location }};
-        }
-
 	location / {
           return 301 https://$host$request_uri;
         }

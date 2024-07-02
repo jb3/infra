@@ -1,14 +1,4 @@
 ---
-#######
-####### Major credit to my brother from another mother for the Let's Encrypt configurations:
-#######
-
-#       d88b  .o88b. db   db d8888b. d888888b .d8888. d888888b  d888b  d888888b d888888b
-#       `8P' d8P  Y8 88   88 88  `8D   `88'   88'  YP `~~88~~' 88' Y8b   `88'   `~~88~~'
-#        88  8P      88ooo88 88oobY'    88    `8bo.      88    88         88       88
-#        88  8b      88~~~88 88`8b      88      `Y8b.    88    88  ooo    88       88
-#    db. 88  Y8b  d8 88   88 88 `88.   .88.   db   8D    88    88. ~8~   .88.      88
-#    Y8888P   `Y88P' YP   YP 88   YD Y888888P `8888Y'    YP     Y888P  Y888888P    YP
 
 - name: Install nginx
   ansible.builtin.package:
@@ -16,9 +6,11 @@
     state: present
   notify: Nginx enable
 
-- name: Install certbot
+- name: Install certbot & RFC2136 plugin
   ansible.builtin.package:
-    name: certbot
+    name:
+      - certbot
+      - python3-certbot-dns-rfc2136
     state: present
 
 - name: Install rsync
@@ -33,41 +25,13 @@
     mode: "0774"
   notify: Nginx reload
 
-- name: Generate list of domains to generate certificates for
-  ansible.builtin.set_fact:
-    domains: "{{ nginx_sites | map(attribute='domain') | list }}"
-
-- name: Check letsencrypt webroot exists
-  ansible.builtin.file:
-    name: "{{ nginx_tls_well_known_location }}"
-    state: directory
-    mode: "0774"
-    owner: nginx
-    group: nginx
-
-- name: Check if certificate is present
-  ansible.builtin.stat:
-    path: /etc/letsencrypt/live/{{ nginx_sites[0]["domain"] }}
-  register: cert_live
-
-- name: Clear config dir if cert does not exist
-  ansible.builtin.file:
-    path: /etc/nginx/conf.d
-    state: absent
-  when: not cert_live.stat.exists
-
-- name: Create config dir again if deleted
-  ansible.builtin.file:
-    path: /etc/nginx/conf.d
-    state: directory
-    mode: "0774"
-  when: not cert_live.stat.exists
-
-- name: Restart nginx if config had to be wiped
-  ansible.builtin.service:
-    name: nginx
-    state: restarted
-  when: not cert_live.stat.exists
+- name: Copy RFC2136 credentials to Let's Encrypt directory
+  template:
+    src: rfc2136.ini.j2
+    dest: "{{ nginx_tls_rfc2136_location }}"
+    owner: root
+    group: root
+    mode: "0600"
 
 - name: Provision TLS certificates for all configured domains
   ansible.builtin.command: >-
@@ -75,12 +39,14 @@
     --agree-tos
     --non-interactive
     --email {{ nginx_tls_email }}
-    --authenticator webroot
-    --webroot-path {{ nginx_tls_well_known_location | quote }}
-    --domains {{ domains | join(",") | quote }}
+    --dns-rfc2136
+    --dns-rfc2136-credentials {{ nginx_tls_rfc2136_location }}
+    --domains {{ nginx_tls_domains | join(",") | quote }}
     certonly
   args:
-    creates: /etc/letsencrypt/live/{{ nginx_sites[0]["domain"] }}
+    creates: /etc/letsencrypt/live/{{ nginx_tls_domains[0] }}
+  notify:
+    - Nginx restart
 
 - name: Copy HTPASSWD file
   ansible.builtin.copy:

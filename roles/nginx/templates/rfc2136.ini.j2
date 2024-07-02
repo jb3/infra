@@ -1,0 +1,5 @@
+dns_rfc2136_server = {{ hostvars[primary_nameserver]['ansible_host'] }}
+dns_rfc2136_port = 53
+dns_rfc2136_name = acme.
+dns_rfc2136_secret = {{ nginx_acme_tsig }}
+dns_rfc2136_algorithm = HMAC-SHA512

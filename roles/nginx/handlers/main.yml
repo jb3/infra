@@ -4,6 +4,11 @@
     name: nginx
     state: reloaded
 
+- name: Nginx restart
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+
 - name: Nginx enable
   ansible.builtin.service:
     name: nginx

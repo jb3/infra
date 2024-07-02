@@ -1,6 +1,9 @@
 ---
 nginx_tls_email: joe@jb3.dev
-nginx_tls_well_known_location: /usr/share/nginx/letsencrypt
+nginx_tls_domains:
+  - jb3.dev
+  - "*.jb3.dev"
+nginx_tls_rfc2136_location: /etc/letsencrypt/rfc2136.ini
 
 nginx_sites:
   - name: default
