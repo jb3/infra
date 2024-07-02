@@ -4,7 +4,7 @@
   tags:
     - common
 
-- hosts: nameservers
+- hosts: dns
   roles:
     - nameserver
   tags:
@@ -14,16 +14,4 @@
   roles:
     - nginx
   tags:
-    - web
-
-- hosts: web
-  roles:
-    - blog
-  tags:
-    - blog
-
-- hosts: web
-  roles:
-    - gitea
-  tags:
-    - gitea
+    - nginx
