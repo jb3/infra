@@ -27,7 +27,8 @@
     comment: "{{ item['comment'] }}"
     password: "{{ item['password'] }}"
     groups: "{{ ['machinist'] if item['sudoer'] else [] }}"
-    shell: /bin/bash
+    append: yes
+    shell: "{{ user_shell }}"
     state: present
   with_items:
     - "{{ users }}"
