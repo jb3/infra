@@ -60,7 +60,7 @@ http {
         server_name  _;
         root         /usr/share/nginx/html;
 
-	location / {
+  location / {
           return 301 https://$host$request_uri;
         }
     }

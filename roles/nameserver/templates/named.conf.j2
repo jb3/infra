@@ -29,11 +29,11 @@ zone "jb3.dev." {
     
     {% for tsig in nameserver_tsigs %}
        {% if tsig["restricted"] %}
-	   {% for label in tsig["to"] %}
-	       grant {{ tsig["name"] }}. name {{ label["name"] }}. {{ label["type"] }};
-	   {% endfor %}
+     {% for label in tsig["to"] %}
+         grant {{ tsig["name"] }}. name {{ label["name"] }}. {{ label["type"] }};
+     {% endfor %}
        {% else %}
-	   grant {{ tsig["name"] }}. zonesub any;
+     grant {{ tsig["name"] }}. zonesub any;
        {% endif %}
     {% endfor %}
     };
