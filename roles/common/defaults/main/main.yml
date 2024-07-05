@@ -12,3 +12,7 @@ common_users:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFEUjgY7lb+W+YMwas7f3MgKQcsOLLh0RDhgvogt3sjd ci@ivo
     password: '{{ ssh_passwords["ci"] }}'
     comment: CI User
+  - name: jc
+    keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKFPePejdbdBvcpKPd7Smpl0bUEmA4Yr7qphlMEw88OY jc@jchri.st
+    comment: "Johannes Christ"
