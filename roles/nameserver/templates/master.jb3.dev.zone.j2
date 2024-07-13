@@ -4,7 +4,7 @@
 
 $TTL    10m
 @   IN  SOA core.host.jb3.dev. joe.jb3.dev. (
-                            25 ; serial
+                            28 ; serial
                             3H ; refresh
                             15 ; retry
                             1w ; expire
@@ -58,5 +58,5 @@ _matrix._tcp     IN  SRV  10 0 8448 matrix.jb3.dev.
                         IN  TXT     "keybase-site-verification=IwS3xfzNgfRW24EKdVy0_baH8QRbYcoZ39lmtSKXffk"
                         IN  TXT     "google-site-verification=_ji-xazMDoljwe3s-FlMzGspJBD1MSKM99DpXCYPWZs"
 _dmarc                  IN  TXT     "v=DMARC1; p=quarantine; adkim=s; aspf=s; rua=mailto:joe@jb3.dev"
-google._domainkey       IN  TXT     ( "v=DKIM1; k=rsa;" " p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkqzOiWsXBXmWE9wuSxT3BWPgq" "s3CdpkZ57SUzeMoUnNAip7bl+Ymmtw1LfFOg53fs5LHtlwUBQwZo7NQ5dHj4lUpGW6n1kJxnjZ2DPy" "Ba+Dj4JINDkSaEp5LTk/EBfCe2pCWFBBTwpB7fy8X2xlLuJflDEHfKCZAIY710N57+fYnUjBDBEv8" "S3dIGg5/qJNSyiYuP78nyAlTQMt4kViIfdBqOGNo8r3vTERmgI0RerOgGJySns4Js2kdSwEi5oBMv" "neDjGHkIWqnyuD4wNsyVBp6brZf0TNe3hPq1h+UNBS3YFdxGe5+Prg9yK/yszP+402PhunkdVfW1c" "aFgeDw9QIDAQAB" )
+google._domainkey       IN  TXT "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5r+PJSyA15Gr+4ZcU7GO2OLxGqdSN75P+dgFYhnbgwtrK8Rlgd1bhoOm5e8a3xHjxDyk3ucRA5WNlaAxoZXkKJmO+9+88CPEjBCsWgabMs/krU2jl9fLNFgYJSbVKRKPrivafSAs5VwDpfgeapsdaNAa4pQ+fowrrgfZRUwLU6dZUpQ" "+cNUYRI4M5TXnIQSaoPBWd1mNheFaSuq4fKH/c0anWfJluMA/BkyUoYXqew6TIzFONv72J5kxakQMyYi4xvUtj81O2kJMu36HZYUkqbKsJ+dU9h4K+YHJFSJp8x5zgrfPrBdm7EWyUJKYEubMhwIBhBgx9NrOTso3ztKhdwIDAQAB"
 _discord.jb3.dev.       1       IN      TXT     "dh=f7b3af3cd06ad1c5c338fe901bb940d9c6f03106"
