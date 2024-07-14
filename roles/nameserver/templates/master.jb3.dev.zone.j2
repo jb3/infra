@@ -2,6 +2,7 @@
 ;
 ; Records should be grouped by (type, resolved host, alphabetical label)
 
+$ORIGIN jb3.dev.
 $TTL    10m
 @   IN  SOA core.host.jb3.dev. joe.jb3.dev. (
                             28 ; serial
@@ -18,16 +19,18 @@ $TTL    10m
 {% endfor %}
 
 ; A records
-@       IN  A   202.61.228.148
-leacs   IN  A   202.61.228.148
-matrix  IN  A   202.61.228.148
-znc     IN  A   202.61.228.148
+@                IN  A   202.61.228.148
+leacs            IN  A   202.61.228.148
+matrix           IN  A   202.61.228.148
+znc              IN  A   202.61.228.148
+*.blog-staging   IN  A   202.61.228.148
 
 ; AAAA records
-@       IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
-leacs   IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
-matrix  IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
-znc     IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
+@              IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
+leacs          IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
+matrix         IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
+znc            IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
+*.blog-staging IN  AAAA   2a03:4000:57:b16:a4be:28ff:fe49:f0a1
 
 ; CNAME records
 polywork    IN  CNAME  glacial-raspberry-1ci6dx01r4f5eui8kjdp7lfl.herokudns.com.
