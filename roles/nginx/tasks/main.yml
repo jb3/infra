@@ -64,6 +64,13 @@
     - "{{ nginx_sites }}"
   notify: Nginx reload
 
+- name: Copy additional configurations
+  ansible.builtin.copy:
+    src: additional_configs/
+    dest: /etc/nginx/conf.d/
+    mode: "0774"
+  notify: Nginx reload
+
 - name: Reload nginx after certificate renewal
   ansible.builtin.copy:
     content: |
