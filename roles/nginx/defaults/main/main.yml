@@ -3,6 +3,7 @@ nginx_tls_email: joe@jb3.dev
 nginx_tls_domains:
   - jb3.dev
   - "*.jb3.dev"
+  - "*.blog-staging.jb3.dev"
 nginx_tls_rfc2136_location: /etc/letsencrypt/rfc2136.ini
 
 nginx_sites:
