@@ -7,3 +7,5 @@ nameserver_tsigs:
     to:
       - type: txt
         name: _acme-challenge.jb3.dev
+      - type: txt
+        name: _acme-challenge.blog-staging.jb3.dev
