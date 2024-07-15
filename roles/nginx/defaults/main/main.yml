@@ -27,3 +27,7 @@ nginx_sites:
     domain: leacs.jb3.dev
     root: /usr/share/nginx/leacs
     authenticated: true
+  - name: files
+    type: static
+    domain: files.jb3.dev
+    root: /usr/share/nginx/files
