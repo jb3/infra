@@ -11,6 +11,12 @@ nginx_sites:
     type: static
     domain: jb3.dev
     root: /usr/share/nginx/jb3.dev
+    server_config: |
+      # Additional listen socket for Tor clients
+      listen unix:/var/run/tor/nginx.sock;
+    location_config: |
+      # Return an Onion-Location for Tor users
+      add_header Onion-Location "http://{{ tor_address }}$request_uri" always;
   - name: matrix
     type: reverse-proxy
     domain: matrix.jb3.dev
@@ -31,3 +37,5 @@ nginx_sites:
     type: static
     domain: files.jb3.dev
     root: /usr/share/nginx/files
+    headers:
+      X-Robots-Tag: noindex
