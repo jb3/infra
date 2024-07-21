@@ -13,3 +13,6 @@ ssh-keys/
 # Ansible Vault credentials
 vault_passwords
 tsigs/
+
+# Tor configuration
+tor-keys/

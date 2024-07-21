@@ -1,4 +1,9 @@
 ---
+- name: Install EPEL Release
+  ansible.builtin.package:
+    name: epel-release
+    state: present
+
 - name: Disable password authentication (SSH)
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
