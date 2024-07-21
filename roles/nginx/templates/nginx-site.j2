@@ -1,6 +1,10 @@
 server {
     server_name {{ item.domain }};
 
+    {% if "server_config" in item %}
+    {{ item.server_config }}
+    {% endif %}
+
     {% if item.type == "reverse-proxy" %}
         {% include "reverse-proxy.j2" %}
     {% elif item.type == "static" %}
