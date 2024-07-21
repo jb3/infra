@@ -6,6 +6,13 @@
   tags:
     - common
 
+- name: Deploy Tor to Tor hosts
+  hosts: tor
+  roles:
+    - tor
+  tags:
+    - tor
+
 - name: Deploy nameservers to DNS hosts
   hosts: dns
   roles:
