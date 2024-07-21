@@ -1,0 +1,4 @@
+---
+tor_hostname: "{{ tor_address }}"
+tor_public_key: "{{ vault_tor_public_key | b64decode }}"
+tor_secret_key: "{{ vault_tor_secret_key | b64decode }}"

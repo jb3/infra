@@ -1,0 +1,49 @@
+---
+- name: Install Tor
+  ansible.builtin.package:
+    name: tor
+    state: present
+
+- name: Enable and start Tor
+  ansible.builtin.service:
+    name: tor
+    state: started
+    enabled: true
+
+- name: Copy Tor configuration file
+  ansible.builtin.copy:
+    src: torrc
+    dest: /etc/tor/torrc
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload Tor Daemon
+
+- name: Create Tor Onion directory
+  ansible.builtin.file:
+    path: /var/lib/tor/onion-site
+    owner: toranon
+    group: toranon
+    mode: "0700"
+    state: directory
+  notify:
+    - Reload Tor Daemon
+
+- name: Copy Tor onion service key material
+  no_log: true
+  ansible.builtin.copy:
+    content: "{{ item.value }}"
+    dest: "/var/lib/tor/onion-site/{{ item.key }}"
+    owner: toranon
+    group: toranon
+    mode: "0600"
+  loop:
+    - key: hostname
+      value: "{{ tor_hostname }}\n"
+    - key: hs_ed25519_public_key
+      value: "{{ tor_public_key }}"
+    - key: hs_ed25519_secret_key
+      value: "{{ tor_secret_key }}"
+  notify:
+    - Restart Tor Daemon

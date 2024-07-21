@@ -1,0 +1,2 @@
+HiddenServiceDir /var/lib/tor/onion-site/
+HiddenServicePort 80 unix:/var/run/tor/nginx.sock
