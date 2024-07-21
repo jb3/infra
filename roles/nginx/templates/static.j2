@@ -3,5 +3,9 @@ root {{ item.root }};
 error_page 404 /404.html;
 
 location / {
+    {% if "location_config" in item %}
+    {{ item.location_config }}
+    {% endif %}
+
     try_files $uri $uri/ =404;
 }
