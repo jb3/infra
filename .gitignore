@@ -16,3 +16,4 @@ tsigs/
 
 # Tor configuration
 tor-keys/
+.ansible
