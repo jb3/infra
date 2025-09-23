@@ -75,7 +75,7 @@
   ansible.builtin.copy:
     content: |
       #!/bin/sh
-      set -ex
+      set -e
 
       systemctl reload nginx
     dest: /etc/letsencrypt/renewal-hooks/deploy/reload-nginx
